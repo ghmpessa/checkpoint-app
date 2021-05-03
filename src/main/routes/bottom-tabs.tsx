@@ -1,6 +1,6 @@
 import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { Community, Home } from '../../presentation/pages'
+import { Community, Home, Profile } from '../../presentation/pages'
 import { IconName } from '../../presentation/components/icon'
 
 const BottomTabs: React.FC = () => {
@@ -15,7 +15,9 @@ const BottomTabs: React.FC = () => {
       labeled={false}
       activeColor='#40A900'
       inactiveColor='#484848'
-      barStyle={{ backgroundColor: '#161616' }}
+      barStyle={{
+        backgroundColor: '#161616'
+      }}
     >
       <Tab.Screen
         name="Home"
@@ -31,13 +33,13 @@ const BottomTabs: React.FC = () => {
           tabBarIcon: IconName.group,
         }}
       />
-      {/* <Tab.Screen
+      <Tab.Screen
         name="Profile"
         component={Profile}
         options={{
           tabBarIcon: IconName.account,
         }}
-      /> */}
+      />
     </Tab.Navigator>
   )
 }

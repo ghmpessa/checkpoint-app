@@ -9,7 +9,7 @@ const Stack = createStackNavigator()
 const AppRoutes: React.FC = () => {
   return (
     <Stack.Navigator
-      initialRouteName='Home'
+      initialRouteName='Login'
       headerMode='none'
     >
       <Stack.Screen
