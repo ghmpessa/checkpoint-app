@@ -3,6 +3,7 @@ import React from 'react'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 
 export enum IconName {
+  configs = 'cog',
   group = 'account-multiple',
   home = 'home',
   list = 'format-list-bulleted',

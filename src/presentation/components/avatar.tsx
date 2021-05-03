@@ -9,14 +9,15 @@ type Props = {
   label: string
   badgeSize?: number
   badgeColor?: string
+  shadow?: boolean
 }
 
-const Avatar: React.FC<Props> = ({ color, size, label = 'NP', badgeSize, badgeColor = '#ff0000' }: Props) => {
+const Avatar: React.FC<Props> = ({ shadow = false, color, size, label = 'NP', badgeSize, badgeColor = '#ff0000' }: Props) => {
   return (
     <View style={styles.container}>
       <PaperAvatar.Text
         labelStyle={{ fontFamily: 'Montserrat-Bold' }}
-        style={{ backgroundColor: color }}
+        style={[{ backgroundColor: color }, shadow && styles.avatar]}
         size={size} label={label} />
       <Badge style={[styles.badge, { backgroundColor: badgeColor }]} size={badgeSize}>38</Badge>
     </View>
@@ -31,6 +32,12 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     top: -10,
     fontFamily: 'Montserrat-Bold'
+  },
+  avatar: {
+    shadowColor: '#61ff00',
+    shadowOpacity: 0.2,
+    shadowRadius: 2,
+    elevation: 5
   }
 })
 

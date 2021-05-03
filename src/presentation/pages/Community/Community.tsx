@@ -1,41 +1,44 @@
 import { Button, Input } from '../../components'
 import React, { useState } from 'react'
-import { FlatList, StyleSheet, View, Text, ScrollView } from 'react-native'
+import { FlatList, StyleSheet, View, Text, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native'
 import { TextInput } from 'react-native-paper'
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
 
 const Home: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Input
-        mode='outlined'
-        style={styles.search}
-        value=''
-        placeholder='find groups...'
-        right={
-          <TextInput.Icon
-            name='magnify'
-            color='#ffffff'
-            size={25}
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <Input
+          mode='outlined'
+          style={styles.search}
+          value=''
+          placeholder='find groups...'
+          right={
+            <TextInput.Icon
+              name='magnify'
+              color='#ffffff'
+              size={25}
+            />
+          }
+        />
+
+        <View style={styles.buttonWrap}>
+          <Button
+            buttonHeight={48}
+            title='create group'
           />
-        }
-      />
+        </View>
 
-      <View style={styles.buttonWrap}>
-        <Button
-          title='create group'
-        />
-      </View>
-
-      <View>
+        {/* <View>
         <FlatList
-          data={[1, 2, 3, 4, 5]}
-          renderItem={({ item }) => (
-            <Text />
+        data={[1, 2, 3, 4, 5]}
+        renderItem={({ item }) => (
+          <Text />
           )}
-        />
-      </View>
-
+          />
+        </View> */}
+      </TouchableWithoutFeedback>
     </View>
   )
 }
