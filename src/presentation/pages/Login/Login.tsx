@@ -1,9 +1,35 @@
-import React from 'react'
+import { Validation } from '../../protocols/validation'
+import React, { useState, useEffect } from 'react'
 import { StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Keyboard } from 'react-native'
 
 import { Button, Input } from '../../components'
 
-const Login: React.FC = () => {
+type Props = {
+  validation: Validation
+}
+
+const Login: React.FC<Props> = ({ validation }: Props) => {
+  const [userInput, setUserInput] = useState({
+    email: '',
+    password: ''
+  })
+  const [error, setError] = useState({
+    emailError: '',
+    passwordError: '',
+    mainError: ''
+  })
+
+  useEffect(() => {
+    const emailError = validation.validate('email', userInput)
+    const passwordError = validation.validate('password', userInput)
+
+    setError({
+      ...error,
+      emailError,
+      passwordError
+    })
+  }, [userInput])
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -15,12 +41,20 @@ const Login: React.FC = () => {
           <View style={styles.content}>
             <Text style={styles.title}>checkpoint</Text>
             <Input
+              error={!!error.emailError}
+              message={error.emailError || undefined}
+              value={userInput.email}
               mode='outlined'
               label='e-mail'
+              onChangeText={email => setUserInput({ ...userInput, email })}
             />
             <Input
+              error={!!error.passwordError}
+              message={error.passwordError || undefined}
+              secureTextEntry
               mode='outlined'
               label='password'
+              onChangeText={password => setUserInput({ ...userInput, password })}
             />
             <View style={styles.button}>
               <Button title='login' />
