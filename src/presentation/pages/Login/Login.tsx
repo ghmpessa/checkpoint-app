@@ -1,14 +1,17 @@
 import { Validation } from '../../protocols/validation'
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Keyboard } from 'react-native'
+import { StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Keyboard, Alert } from 'react-native'
 
 import { Button, Input } from '../../components'
+import { useNavigation } from '@react-navigation/core'
 
 type Props = {
   validation: Validation
 }
 
 const Login: React.FC<Props> = ({ validation }: Props) => {
+  const navigation = useNavigation()
+
   const [userInput, setUserInput] = useState({
     email: '',
     password: ''
@@ -18,6 +21,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
     passwordError: '',
     mainError: ''
   })
+  const formInvalid = !!error.emailError || !!error.passwordError
 
   useEffect(() => {
     const emailError = validation.validate('email', userInput)
@@ -29,6 +33,14 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
       passwordError
     })
   }, [userInput])
+
+  const handleLogin = (): void => {
+    if (formInvalid) {
+      Alert.alert('Invalid username or password')
+    } else {
+      navigation.navigate('Home')
+    }
+  }
 
   return (
     <View style={styles.container}>
@@ -57,7 +69,10 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
               onChangeText={password => setUserInput({ ...userInput, password })}
             />
             <View style={styles.button}>
-              <Button title='login' />
+              <Button
+                onPress={handleLogin}
+                buttonHeight={48}
+                title='login' />
             </View>
             <View style={styles.signUpWrap}>
               <Text style={styles.text}>New here?</Text>

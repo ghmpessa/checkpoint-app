@@ -57,7 +57,6 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: '#121212',
-    flex: 1,
     borderRadius: 10,
     fontSize: 24,
     fontFamily: 'Montserrat-Bold',
