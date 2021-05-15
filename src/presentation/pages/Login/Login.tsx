@@ -79,6 +79,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
               <Button
                 text
                 title='Sign up'
+                handleClick={() => navigation.navigate('SignUp')}
               />
             </View>
 

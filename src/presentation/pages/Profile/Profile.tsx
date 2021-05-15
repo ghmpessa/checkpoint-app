@@ -2,14 +2,14 @@ import React from 'react'
 import { Text, View, StyleSheet } from 'react-native'
 
 import { IconName } from '../../components/icon'
-import { Avatar, Icon } from '../../components'
+import { Avatar, Icon, IconButton } from '../../components'
 
 const Profile: React.FC = () => {
   return (
     <View style={styles.container}>
       <View style={styles.profileHeader}>
         <View style={styles.config}>
-          <Icon name={IconName.configs} color='#ffffff' size={32} />
+          <IconButton iconName={IconName.configs} color='transparent' iconColor='#ffffff' />
         </View>
         <Avatar color='#000000' label='V' size={120} badgeSize={30} badgeColor='#49ff00' />
         <Text style={styles.name}>O Verdadeiro</Text>

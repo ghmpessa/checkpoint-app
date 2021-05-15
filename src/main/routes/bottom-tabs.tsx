@@ -16,7 +16,9 @@ const BottomTabs: React.FC = () => {
       activeColor='#40A900'
       inactiveColor='#484848'
       barStyle={{
-        backgroundColor: '#161616'
+        backgroundColor: '#161616',
+        borderTopWidth: 1,
+        borderTopColor: '#323232'
       }}
     >
       <Tab.Screen
