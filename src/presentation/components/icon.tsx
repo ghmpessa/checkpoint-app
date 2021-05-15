@@ -14,7 +14,8 @@ export enum IconName {
   exit = 'exit-to-app',
   back = 'arrow-left',
   arrowDown = 'chevron-down',
-  plus = 'plus'
+  plus = 'plus',
+  edit = 'pencil',
 }
 
 type Props = {

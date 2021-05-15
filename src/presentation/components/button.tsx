@@ -29,13 +29,12 @@ const Button: React.FC<Props> = ({ title, text = false, fontSize = 20, buttonHei
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
-    minHeight: 32,
     borderRadius: 12,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#40A900',
     marginHorizontal: 10,
-    padding: 10
+    paddingHorizontal: 10
   },
   text: {
     color: 'white',

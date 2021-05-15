@@ -1,20 +1,60 @@
 import React from 'react'
-import { Text, View, StyleSheet } from 'react-native'
+import { Text, View, StyleSheet,ScrollView, FlatList } from 'react-native'
 
 import { IconName } from '../../components/icon'
-import { Avatar, Icon, IconButton } from '../../components'
+import { Avatar, IconButton } from '../../components'
+import InfoPaper from './components/info-paper'
+import GameCard, { GameLogos } from './components/game-card'
 
 const Profile: React.FC = () => {
+  const games = [
+  {
+    nick: 'FalleN',
+    rank: 'Global',
+    team: 'Team Liquid',
+    game: GameLogos.cs
+  },
+  {
+    nick: 'FalleN',
+    rank: 'Radiant',
+    team: 'Team Liquid',
+    game: GameLogos.valorant
+  },
+  {
+    nick: 'FalleN',
+    rank: 'Predator',
+    team: 'Team Liquid',
+    game: GameLogos.lol
+  }]
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.profileHeader}>
-        <View style={styles.config}>
-          <IconButton iconName={IconName.configs} color='transparent' iconColor='#ffffff' />
-        </View>
+          <IconButton style={styles.config} iconName={IconName.configs} color='transparent' iconColor='#ffffff' />
         <Avatar color='#000000' label='V' size={120} badgeSize={30} badgeColor='#49ff00' />
         <Text style={styles.name}>O Verdadeiro</Text>
       </View>
-    </View>
+
+      <View style={styles.content}>
+        <InfoPaper
+          label='name'
+          text='Gabriel Toledo'
+          image={false}
+        />
+        <InfoPaper
+          label='twitch'
+          text='twitch.tv/gafallen'
+          image
+        />
+        <Text style={styles.gamesTitle}>my games</Text>
+
+        <View style={{flex: 1}}>
+          {games.map(game => (
+            <GameCard info={game} />
+          ))}
+        </View>
+
+      </View>
+    </ScrollView>
   )
 }
 
@@ -37,10 +77,20 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Bold'
   },
   config: {
-    width: '100%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
+    position: 'absolute',
+    right: 15,
+    top: 15
+  },
+  content: {
+    flex: 1,
+    padding: 15
+  },
+  gamesTitle: {
+    alignSelf: 'center',
+    fontSize: 24,
+    fontFamily: 'Montserrat-Bold',
+    color: '#ffffff',
+    marginVertical: 20
   }
 })
 

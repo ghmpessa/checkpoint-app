@@ -16,7 +16,7 @@ const CreateGroupModal: React.FC = () => {
 
   const {visible, setVisible} = useContext(CommunityContext)
 
-  const games = ['F1', 'Counter-Strike: Global Offensive', 'League of Legends', 'Valorant', 'GTA V', 'Fifa21', 'Free Fire', 'Rainbow6 Siege', 'Fall Guys', 'World of Warcraft', 'The Elder Scrolls Online', 'Apex Legends', 'COD: Warzone']
+  const games = ['F1 2020', 'Counter-Strike: Global Offensive', 'League of Legends', 'Valorant', 'GTA V', 'Fifa21', 'Free Fire', 'Rainbow6 Siege', 'Fall Guys', 'World of Warcraft', 'The Elder Scrolls Online', 'Apex Legends', 'COD: Warzone']
 
   const handleSelect = (game: string): void => {
     setGroup({ ...group, game })

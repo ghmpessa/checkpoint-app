@@ -17,7 +17,6 @@ const Home: React.FC = () => {
         <Input
           mode='outlined'
           style={styles.search}
-          value=''
           placeholder='find groups...'
           right={
             <TextInput.Icon
@@ -32,6 +31,7 @@ const Home: React.FC = () => {
           <Button
             title='create group'
             icon={IconName.plus}
+            buttonHeight={40}
             onPress={() => setVisible(true)}
           />
         </View>
