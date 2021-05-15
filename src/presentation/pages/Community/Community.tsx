@@ -1,10 +1,12 @@
-import { Button, Input } from '../../components'
 import React, { useState } from 'react'
+import { Button, Input } from '../../components'
 import { FlatList, StyleSheet, View, Text, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+import CreateGroupModal from './components/create-group-modal'
 
 const Home: React.FC = () => {
+  const [visible, setVisible] = useState(false)
 
   return (
     <View style={styles.container}>
@@ -27,6 +29,7 @@ const Home: React.FC = () => {
           <Button
             buttonHeight={48}
             title='create group'
+            onPress={() => setVisible(true)}
           />
         </View>
 
@@ -38,6 +41,7 @@ const Home: React.FC = () => {
           )}
           />
         </View> */}
+        {<CreateGroupModal visible={visible} />}
       </TouchableWithoutFeedback>
     </View>
   )

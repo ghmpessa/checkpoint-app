@@ -12,7 +12,8 @@ export enum IconName {
   account = 'account-circle',
   person = 'account',
   exit = 'exit-to-app',
-  back = 'arrow-left'
+  back = 'arrow-left',
+  arrowDown = 'chevron-down'
 }
 
 type Props = {
