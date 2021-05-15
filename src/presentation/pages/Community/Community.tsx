@@ -3,7 +3,10 @@ import { Button, Input } from '../../components'
 import { FlatList, StyleSheet, View, Text, ScrollView, KeyboardAvoidingView, Keyboard } from 'react-native'
 import { TextInput } from 'react-native-paper'
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler'
+
+import {CommunityContext} from '../../contexts'
 import CreateGroupModal from './components/create-group-modal'
+import { IconName } from '../../components/icon'
 
 const Home: React.FC = () => {
   const [visible, setVisible] = useState(false)
@@ -27,8 +30,8 @@ const Home: React.FC = () => {
 
         <View style={styles.buttonWrap}>
           <Button
-            buttonHeight={48}
             title='create group'
+            icon={IconName.plus}
             onPress={() => setVisible(true)}
           />
         </View>
@@ -41,7 +44,9 @@ const Home: React.FC = () => {
           )}
           />
         </View> */}
-        {<CreateGroupModal visible={visible} />}
+        <CommunityContext.Provider value={{ visible, setVisible }}>
+          <CreateGroupModal />
+        </CommunityContext.Provider>
       </TouchableWithoutFeedback>
     </View>
   )

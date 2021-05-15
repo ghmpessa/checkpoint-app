@@ -13,7 +13,8 @@ export enum IconName {
   person = 'account',
   exit = 'exit-to-app',
   back = 'arrow-left',
-  arrowDown = 'chevron-down'
+  arrowDown = 'chevron-down',
+  plus = 'plus'
 }
 
 type Props = {

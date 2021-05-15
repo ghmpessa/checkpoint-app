@@ -1,16 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { StyleSheet, View, Text, Modal, ScrollView, TouchableOpacity, Alert } from 'react-native'
 
-import { Button as PaperButton } from 'react-native-paper'
+import { CommunityContext } from '../../../contexts'
 
-import { Input, Icon, IconButton } from '../../../components'
+import { Input, Icon, IconButton, Button } from '../../../components'
 import { IconName } from '../../../components/icon'
 
-type Props = {
-  visible: boolean
-}
-
-const CreateGroupModal: React.FC<Props> = ({visible = false}: Props) => {
+const CreateGroupModal: React.FC = () => {
   const [group, setGroup] = useState({
     name: '',
     description: '',
@@ -18,11 +14,16 @@ const CreateGroupModal: React.FC<Props> = ({visible = false}: Props) => {
   })
   const [gamesVisible, setGamesVisible] = useState(false)
 
+  const {visible, setVisible} = useContext(CommunityContext)
+
   const games = ['F1', 'Counter-Strike: Global Offensive', 'League of Legends', 'Valorant', 'GTA V', 'Fifa21', 'Free Fire', 'Rainbow6 Siege', 'Fall Guys', 'World of Warcraft', 'The Elder Scrolls Online', 'Apex Legends', 'COD: Warzone']
 
   const handleSelect = (game: string): void => {
     setGroup({ ...group, game })
     setGamesVisible(!gamesVisible)
+  }
+  const handleClick = (): void => {
+    setVisible(!visible)
   }
 
   return (
@@ -35,7 +36,7 @@ const CreateGroupModal: React.FC<Props> = ({visible = false}: Props) => {
         }}
       >
         <View style={[styles.modalView]}>
-          <IconButton style={styles.close} iconName={IconName.arrowDown} iconColor='#ffffff' />
+          <IconButton onPress={handleClick} style={styles.close} iconName={IconName.arrowDown} iconColor='#ffffff' />
           <Text style={styles.title}>create your group</Text>
           <ScrollView contentContainerStyle={styles.modalScroll} showsVerticalScrollIndicator={false}>
             <Input
@@ -82,19 +83,12 @@ const CreateGroupModal: React.FC<Props> = ({visible = false}: Props) => {
                 </View>
               </Modal>
             </TouchableOpacity>
-            <Input
-              style={styles.input}
-              label='Complemento'
-              underlineColor='#40A900'
-            />
           </ScrollView>
-            <PaperButton
+            <Button
               style={styles.modalButtonWrap}
-              uppercase={false}
-              mode='text'
+              title='create group'
             >
-              <Text style={styles.headerText}>create group</Text>
-          </PaperButton>
+          </Button>
       </View>
     </Modal>
   )
@@ -141,8 +135,10 @@ const styles = StyleSheet.create({
     width: '100%',
     position: 'absolute',
     bottom: 0,
+    alignItems: 'center',
+    justifyContent: 'center',
     backgroundColor: '#40A900',
-    borderTopWidth: 10
+    padding: 10
   },
   headerText: {
     fontSize: 18,
