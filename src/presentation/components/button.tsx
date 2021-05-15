@@ -6,13 +6,15 @@ interface Props extends RectButtonProps {
   title: string
   text?: boolean
   fontSize?: number
-  buttonHeight?: number
+  buttonHeight?: number,
+  handleClick?: () => void
 }
 
-const Button: React.FC<Props> = ({ title, text = false, fontSize = 20, buttonHeight, ...rest }: Props) => {
+const Button: React.FC<Props> = ({ title, text = false, fontSize = 20, buttonHeight, handleClick, ...rest }: Props) => {
   return (
     <RectButton
       style={text ? styles.textButton : [styles.container, buttonHeight && { height: buttonHeight }]}
+      onPress={handleClick}
       {...rest}
     >
       <Text style={[styles.text, text && styles.textColor, { fontSize: fontSize }]}>{title}</Text>
