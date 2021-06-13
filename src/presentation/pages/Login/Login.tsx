@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { Validation } from '../../protocols/validation'
 import { StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Keyboard, Alert } from 'react-native'
 
-import {ApiContext} from '../../contexts'
+import { Validation } from '../../protocols/validation'
+import { ApiContext } from '../../contexts'
 import { Button, Input } from '../../components'
 import { useNavigation } from '@react-navigation/core'
-import { Authentication, AuthenticationParams } from '@/domain/usecases'
+import { Authentication, AuthenticationParams } from '../../../domain/usecases'
 
 type Props = {
   authentication: Authentication

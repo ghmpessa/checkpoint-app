@@ -13,14 +13,12 @@ export class AxiosHttpClient implements HttpClient {
         params: data.params
       }
       )
-      console.log(axiosResponse)
     } catch (error) {
       axiosResponse = error.response
-      console.log(axiosResponse)
     }
 
     return {
-      statusCode: axiosResponse.statusCode,
+      status: axiosResponse.status,
       body: axiosResponse.data
     }
   }

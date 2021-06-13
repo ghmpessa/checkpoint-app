@@ -15,7 +15,7 @@ export class RemoteLoadAccount implements LoadAccount {
       method: 'get'
     })
 
-    switch (httpResponse.statusCode) {
+    switch (httpResponse.status) {
       case HttpStatusCode.ok: return httpResponse.body
       case HttpStatusCode.serverError: throw new ServerError()
       default: throw new UnexpectedError()

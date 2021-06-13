@@ -16,7 +16,7 @@ export class RemoteAddAccount implements AddAccount {
       method: 'post'
     })
 
-    switch ((await httpResponse).statusCode) {
+    switch ((await httpResponse).status) {
       case HttpStatusCode.ok: return httpResponse.body
       case HttpStatusCode.forbidden:
       case HttpStatusCode.badRequest: throw new InvalidParamError()

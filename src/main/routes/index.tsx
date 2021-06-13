@@ -5,7 +5,7 @@ import { getCurrentAccountAdapter, setCurrentAccountAdapter } from '../adapters/
 
 
 import StackRoutes from './stack.routes'
-import { ApiContext } from '@/presentation/contexts'
+import { ApiContext } from '../../presentation/contexts'
 
 const Routes: React.FC = () => (
   <NavigationContainer>
