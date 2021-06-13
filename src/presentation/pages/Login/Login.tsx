@@ -1,7 +1,8 @@
+import React, { useState, useEffect, useContext } from 'react'
 import { Validation } from '../../protocols/validation'
-import React, { useState, useEffect } from 'react'
 import { StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text, Keyboard, Alert } from 'react-native'
 
+import {ApiContext} from '../../contexts'
 import { Button, Input } from '../../components'
 import { useNavigation } from '@react-navigation/core'
 import { Authentication, AuthenticationParams } from '@/domain/usecases'
@@ -12,6 +13,7 @@ type Props = {
 }
 
 const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
+  const { setCurrentAccount } = useContext(ApiContext)
   const navigation = useNavigation()
 
   const [userInput, setUserInput] = useState<AuthenticationParams>({
@@ -38,7 +40,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
     })
   }, [userInput])
 
-  const handleLogin = (): void => {
+  const handleLogin = async (): Promise<void> => {
     try {
 
       if (loading) {
@@ -46,7 +48,9 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       }
       setLoading(true)
 
-      authentication.auth(userInput)
+      const account = await authentication.auth(userInput)
+      setCurrentAccount(account)
+
       setLoading(false)
 
       navigation.navigate('Main')

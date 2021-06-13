@@ -46,7 +46,7 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
 
   const formInvalid = !!error.usernameError || !!error.nameError || !!error.emailError || !!error.passwordError
 
-  const handleRegister = (): void => {
+  const handleRegister = async (): Promise<void> => {
     try {
       if (loading) {
         return
@@ -54,7 +54,7 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
 
       setLoading(true)
 
-      addAccount.add(user)
+      await addAccount.add(user)
 
       setLoading(false)
       Alert.alert('Done!', 'Your account have been created!', [{
