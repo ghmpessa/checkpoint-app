@@ -4,41 +4,54 @@ import { StyleSheet, KeyboardAvoidingView, TouchableWithoutFeedback, View, Text,
 
 import { Button, Input } from '../../components'
 import { useNavigation } from '@react-navigation/core'
+import { Authentication, AuthenticationParams } from '@/domain/usecases'
 
 type Props = {
+  authentication: Authentication
   validation: Validation
 }
 
-const Login: React.FC<Props> = ({ validation }: Props) => {
+const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
   const navigation = useNavigation()
 
-  const [userInput, setUserInput] = useState({
-    email: '',
+  const [userInput, setUserInput] = useState<AuthenticationParams>({
+    username: '',
     password: ''
   })
   const [error, setError] = useState({
-    emailError: '',
+    username: '',
     passwordError: '',
     mainError: ''
   })
-  const formInvalid = !!error.emailError || !!error.passwordError
+  const [loading, setLoading] = useState(false)
+
+  const formInvalid = !!error.username || !!error.passwordError
 
   useEffect(() => {
-    const emailError = validation.validate('email', userInput)
+    const username = validation.validate('username', userInput)
     const passwordError = validation.validate('password', userInput)
 
     setError({
       ...error,
-      emailError,
+      username,
       passwordError
     })
   }, [userInput])
 
   const handleLogin = (): void => {
-    if (formInvalid) {
-      Alert.alert('Invalid username or password')
-    } else {
+    try {
+
+      if (loading) {
+        return
+      }
+      setLoading(true)
+
+      const account = authentication.auth(userInput)
+
       navigation.navigate('Home')
+
+    } catch (error) {
+      Alert.alert('Login error!', error.message)
     }
   }
 
@@ -53,12 +66,12 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
           <View style={styles.content}>
             <Text style={styles.title}>checkpoint</Text>
             <Input
-              error={!!error.emailError}
-              message={error.emailError || undefined}
-              value={userInput.email}
+              error={!!error.username}
+              message={error.username || undefined}
+              value={userInput.username}
               mode='outlined'
               label='e-mail'
-              onChangeText={email => setUserInput({ ...userInput, email })}
+              onChangeText={username => setUserInput({ ...userInput, username })}
             />
             <Input
               error={!!error.passwordError}
@@ -70,6 +83,7 @@ const Login: React.FC<Props> = ({ validation }: Props) => {
             />
             <View style={styles.button}>
               <Button
+                disabled={formInvalid}
                 onPress={handleLogin}
                 buttonHeight={48}
                 title='login' />

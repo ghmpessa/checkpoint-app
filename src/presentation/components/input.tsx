@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { StyleSheet } from 'react-native'
 
 import { TextInput, HelperText } from 'react-native-paper'
-import { theme } from '../styles/theme'
 
 type InputProps = {
   error?: boolean
@@ -48,7 +47,8 @@ const styles = StyleSheet.create({
     fontSize: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingTop: 10
+    paddingTop: 10,
+    alignSelf: 'center'
   }
 })
 

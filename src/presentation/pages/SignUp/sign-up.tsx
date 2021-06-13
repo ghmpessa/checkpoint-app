@@ -4,9 +4,44 @@ import { StyleSheet, View, Text, ScrollView, TouchableWithoutFeedback, Keyboard,
 
 import { Button, Input, IconButton } from '../../components'
 import { IconName } from '../../components/icon'
+import { useState } from 'react'
+import { AddAccount, AddAccountParams } from '../../../domain/usecases'
+import { Validation } from '@/presentation/protocols/validation'
+import { useEffect } from 'react'
 
-const SignUp: React.FC = () => {
+type Props = {
+  validation: Validation
+  addAccount: AddAccount
+}
+
+const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
   const navigation = useNavigation()
+  const [user, setUser] = useState<AddAccountParams>({
+    username: '',
+    name: '',
+    email: '',
+    password: ''
+  })
+  const [error, setError] = useState({
+    usernameError: '',
+    nameError: '',
+    emailError: '',
+    passwordError: ''
+  })
+
+  useEffect(() => {
+    const usernameError = validation.validate('username', user)
+    const nameError = validation.validate('name', user)
+    const emailError = validation.validate('email', user)
+    const passwordError = validation.validate('password', user)
+
+    setError({
+      usernameError,
+      nameError,
+      emailError,
+      passwordError
+      })
+  }, [user])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -15,30 +50,37 @@ const SignUp: React.FC = () => {
         <Text style={styles.title}>checkpoint</Text>
         <Text style={styles.subtitle}>Sign Up</Text>
           <Input
+            error={!!error.usernameError}
+            message={error.usernameError || undefined}
             style={{backgroundColor: '#202020', marginVertical: 20}}
-            label='name'
+            label='username'
             underlineColor='#40A900'
+            onChangeText={username => setUser({...user, username })}
           />
           <Input
+            error={!!error.nameError}
+            message={error.nameError || undefined}
+            label='name'
+            style={{backgroundColor: '#202020', marginVertical: 20}}
+            underlineColor='#40A900'
+            onChangeText={name => setUser({...user, name })}
+            />
+          <Input
+            error={!!error.emailError}
+            message={error.emailError || undefined}
             style={{backgroundColor: '#202020', marginVertical: 20}}
             label='e-mail'
-            underlineColor='#40A900' />
+            underlineColor='#40A900'
+            onChangeText={email => setUser({...user, email })}
+            />
           <Input
-            label='nickname'
-            style={{backgroundColor: '#202020', marginVertical: 20}}
-            underlineColor='#40A900' />
-          <Input 
-            label='nickname'
-            style={{backgroundColor: '#202020', marginVertical: 20}}
-            underlineColor='#40A900'/>
-          <Input
+            error={!!error.passwordError}
+            message={error.passwordError || undefined}
             label='password'
             style={{backgroundColor: '#202020', marginVertical: 20}}
-            underlineColor='#40A900' />
-          <Input
-            label='confirm password'
-            style={{backgroundColor: '#202020', marginVertical: 20}}
-            underlineColor='#40A900' />
+            underlineColor='#40A900'
+            onChangeText={password => setUser({...user, password })}
+            />
           <Button
             title='sign up'
             style={styles.button}
