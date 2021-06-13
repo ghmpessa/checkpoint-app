@@ -1,7 +1,8 @@
 import React from 'react'
 import { createMaterialBottomTabNavigator } from '@react-navigation/material-bottom-tabs'
-import { Community, Home, Profile } from '../../presentation/pages'
+import { Community, Home } from '../../presentation/pages'
 import { IconName } from '../../presentation/components/icon'
+import { makeProfile } from '../factories/pages'
 
 const BottomTabs: React.FC = () => {
 
@@ -37,7 +38,7 @@ const BottomTabs: React.FC = () => {
       />
       <Tab.Screen
         name="Profile"
-        component={Profile}
+        component={makeProfile}
         options={{
           tabBarIcon: IconName.account,
         }}

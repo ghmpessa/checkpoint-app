@@ -1,49 +1,86 @@
-import React from 'react'
-import { Text, View, StyleSheet,ScrollView, FlatList } from 'react-native'
+import React, { useContext, useEffect } from 'react'
+import { Text, View, StyleSheet,ScrollView, FlatList, Alert } from 'react-native'
 
 import { IconName } from '../../components/icon'
-import { Avatar, IconButton } from '../../components'
+import { Avatar, IconButton, Load } from '../../components'
 import InfoPaper from './components/info-paper'
 import GameCard, { GameLogos } from './components/game-card'
+import { ApiContext } from '../../contexts'
+import { LoadAccount } from '@/domain/usecases'
+import { useState } from 'react'
+import { ProfileModel } from '@/domain/models'
 
-const Profile: React.FC = () => {
+type Props = {
+  loadAccount: LoadAccount
+}
+
+const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
+  const { getCurrentAccount } = useContext(ApiContext)
+
+  const [loading, setLoading] = useState(true)
+  const [user, setUser] = useState<ProfileModel>({
+    id: '',
+    name: '',
+    username: '',
+    email: '',
+    avatarPath: '',
+    createdAt: '',
+    updatedAt: ''
+  })
+
   const games = [
   {
-    nick: 'FalleN',
+    nick: '.G',
     rank: 'Global',
-    team: 'Team Liquid',
+    team: 'Inatel',
     game: GameLogos.cs
   },
   {
-    nick: 'FalleN',
+    nick: 'gezpot',
     rank: 'Radiant',
-    team: 'Team Liquid',
+    team: 'Inatel',
     game: GameLogos.valorant
-  },
-  {
-    nick: 'FalleN',
-    rank: 'Predator',
-    team: 'Team Liquid',
-    game: GameLogos.lol
   }]
+
+  useEffect(() => {
+    getCurrentAccount()
+      .then(currentAccount => {
+        loadAccount.load(currentAccount.userId)
+          .then(profileData => {
+            setUser(profileData)
+            setLoading(false)
+          })
+        .catch(error => {
+          setLoading(false)
+          Alert.alert('Error!', error.message)
+        })
+      })
+  }, [])
+
+  if (loading) {
+    return <Load />
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.profileHeader}>
           <IconButton style={styles.config} iconName={IconName.configs} color='transparent' iconColor='#ffffff' />
-        <Avatar color='#000000' label='V' size={120} badgeSize={30} badgeColor='#49ff00' />
-        <Text style={styles.name}>O Verdadeiro</Text>
+        <Avatar color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
+        <Text style={styles.name}>{user.username}</Text>
       </View>
 
       <View style={styles.content}>
         <InfoPaper
-          label='name'
-          text='Gabriel Toledo'
-          image={false}
+          variant='name'
+          text={user.name}
         />
         <InfoPaper
-          label='twitch'
-          text='twitch.tv/gafallen'
-          image
+          variant='email'
+          text={user.email}
+        />
+        <InfoPaper
+          variant='twitch'
+          text={'twitch.tv/gzpott'}
         />
         <Text style={styles.gamesTitle}>my games</Text>
 

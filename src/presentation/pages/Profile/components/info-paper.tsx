@@ -6,24 +6,50 @@ import { IconName } from '../../../components/icon'
 
 import twitchLogo from '../../../../../assets/twitch.png'
 
+type Variant = 'name' | 'email' | 'twitch'
+
 type Props = {
-  label: string
+  variant?: Variant
   text: string
-  image?: boolean
 }
 
-const InfoPaper: React.FC<Props> = ({label, text, image = false}: Props) => {
+const InfoPaper: React.FC<Props> = ({variant, text}: Props) => {
+
+  const getVariant = (): any => {
+    switch (variant) {
+      case 'email': 
+        return (
+          <View style={styles.content}>
+            <View style={{position: 'absolute', left: 15}}>
+              <Icon name={IconName.email} color='#999999' />
+            </View>
+            <Text style={styles.text}>{text}</Text>
+          </View>
+        )
+
+      case 'name':
+        return (
+          <View style={styles.content}>
+            <View style={{position: 'absolute', left: 15}}>
+              <Icon name={IconName.person} color='#999999' />
+            </View>
+            <Text style={styles.text}>{text}</Text>
+          </View>
+        )
+        
+      case 'twitch': 
+        return (
+          <View style={styles.content}>
+            <Image style={styles.image} source={twitchLogo} />
+            <Text style={styles.text}>{text}</Text>
+          </View>
+        )
+    }
+  }
+
   return (
     <View style={styles.container}>
-      <View style={styles.content}>
-        {image 
-        ? <Image style={styles.image} source={twitchLogo} /> 
-        : <View style={{position: 'absolute', left: 15}}>
-            <Icon name={IconName.person} color='#999999' />
-          </View>
-}
-        <Text style={styles.text}>{text}</Text>
-      </View>
+      {getVariant()}
     </View>
   )
 }

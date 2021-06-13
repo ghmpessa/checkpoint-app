@@ -16,6 +16,7 @@ export enum IconName {
   arrowDown = 'chevron-down',
   plus = 'plus',
   edit = 'pencil',
+  email = 'at'
 }
 
 type Props = {
