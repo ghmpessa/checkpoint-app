@@ -5,11 +5,11 @@ export type AccountModel = {
 }
 
 export type ProfileModel = {
-  id: string
-  username: string
-  name: string
-  email: string
-  avatarPath: string | null
-  createdAt: string
-  updatedAt: string
+  id?: string
+  username?: string
+  name?: string
+  email?: string
+  avatarPath?: string | null
+  createdAt?: string
+  updatedAt?: string
 }

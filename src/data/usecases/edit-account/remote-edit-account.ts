@@ -19,7 +19,10 @@ export class RemoteEditAccount implements EditAccount {
       case HttpStatusCode.ok: return httpResponse.body
       case HttpStatusCode.badRequest: throw new InvalidParamError()
       case HttpStatusCode.serverError: throw new ServerError()
-      default: throw new UnexpectedError()
+      default: {
+        console.log(httpResponse.body)
+        throw new UnexpectedError()
+      }
     }
   }
 }

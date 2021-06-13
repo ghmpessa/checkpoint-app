@@ -1,23 +1,27 @@
 import React, { useContext, useEffect } from 'react'
-import { Text, View, StyleSheet,ScrollView, FlatList, Alert } from 'react-native'
+import { Text, View, StyleSheet,ScrollView, TextInput, Alert } from 'react-native'
 
 import { IconName } from '../../components/icon'
-import { Avatar, IconButton, Load } from '../../components'
+import { Avatar, Button, IconButton, Load } from '../../components'
 import InfoPaper from './components/info-paper'
 import GameCard, { GameLogos } from './components/game-card'
-import { ApiContext } from '../../contexts'
-import { LoadAccount } from '@/domain/usecases'
+import { ApiContext, ProfileContext } from '../../contexts'
+import { EditAccount, LoadAccount } from '@/domain/usecases'
 import { useState } from 'react'
 import { ProfileModel } from '@/domain/models'
 
 type Props = {
   loadAccount: LoadAccount
+  editAccount: EditAccount
 }
 
-const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
+const Profile: React.FC<Props> = ({ loadAccount, editAccount }: Props) => {
   const { getCurrentAccount } = useContext(ApiContext)
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState({
+    page: true,
+    edit: false
+  })
   const [user, setUser] = useState<ProfileModel>({
     id: '',
     name: '',
@@ -27,6 +31,10 @@ const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
     createdAt: '',
     updatedAt: ''
   })
+
+  const [editedUser, setEditedUser] = useState<ProfileModel>()
+
+  const [edit, setEdit] = useState(false)
 
   const games = [
   {
@@ -48,49 +56,91 @@ const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
         loadAccount.load(currentAccount.userId)
           .then(profileData => {
             setUser(profileData)
-            setLoading(false)
+            setLoading({...loading, page: false})
           })
         .catch(error => {
-          setLoading(false)
+          setLoading({...loading, page: false})
           Alert.alert('Error!', error.message)
         })
       })
   }, [])
 
-  if (loading) {
+  const handleClick = async (): Promise<void> => {
+    try {
+      if(loading.edit) {
+        return
+      }
+      setLoading({...loading, edit: true})
+
+      const profileData = await editAccount.edit(editedUser)
+      setUser(profileData)
+
+      setLoading({...loading, edit: false})
+
+      Alert.alert('Done!', 'Your profile is up to date!', [
+        {
+          text: 'OK',
+          onPress: () => {
+            setEdit(!edit)
+            setEditedUser(null)
+          }
+        }
+      ])
+
+    } catch (error) {
+      setLoading({...loading, edit: false})
+      Alert.alert('Error!', error.message)
+    }
+  }
+
+  if (loading.page) {
     return <Load />
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={styles.profileHeader}>
-          <IconButton style={styles.config} iconName={IconName.configs} color='transparent' iconColor='#ffffff' />
-        <Avatar color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
-        <Text style={styles.name}>{user.username}</Text>
-      </View>
+      <ProfileContext.Provider value={{ editedUser, setEditedUser }}>
+        <View style={styles.profileHeader}>
+            <IconButton style={styles.config} iconName={IconName.configs} color='transparent' iconColor='#ffffff' onPress={() => setEdit(!edit)} />
+          <Avatar color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
+          { edit 
+          ? <TextInput
+              style={styles.input}
+              defaultValue={user.username}
+              onChangeText={username => setEditedUser({ ...editedUser, username })}
 
-      <View style={styles.content}>
-        <InfoPaper
-          variant='name'
-          text={user.name}
-        />
-        <InfoPaper
-          variant='email'
-          text={user.email}
-        />
-        <InfoPaper
-          variant='twitch'
-          text={'twitch.tv/gzpott'}
-        />
-        <Text style={styles.gamesTitle}>my games</Text>
-
-        <View style={{flex: 1}}>
-          {games.map(game => (
-            <GameCard info={game} />
-          ))}
+            />
+          : <Text style={styles.name}>{user.username}</Text>}
         </View>
 
-      </View>
+        <View style={styles.content}>
+          <InfoPaper
+            variant='name'
+            text={user.name}
+            edit={edit}
+          />
+          <InfoPaper
+            variant='email'
+            text={user.email}
+            edit={edit}
+          />
+          <InfoPaper
+            variant='twitch'
+            text={'twitch.tv/gzpott'}
+          />
+
+          { edit && <Button title='save' buttonHeight={50} fontSize={24} handleClick={handleClick} loading={loading.edit} />}
+
+          <Text style={styles.gamesTitle}>my games</Text>
+
+          <View style={{flex: 1}}>
+            {games.map(game => (
+              <GameCard info={game} />
+            ))}
+          </View>
+
+        </View>
+      </ProfileContext.Provider>
     </ScrollView>
   )
 }
@@ -104,14 +154,14 @@ const styles = StyleSheet.create({
     backgroundColor: '#303030',
     borderBottomRightRadius: 80,
     borderBottomLeftRadius: 80,
-    alignItems: 'center',
     padding: 15
   },
   name: {
     fontSize: 36,
     color: '#f2f2f2',
     opacity: 0.9,
-    fontFamily: 'Montserrat-Bold'
+    fontFamily: 'Montserrat-Bold',
+    alignSelf: 'center'
   },
   config: {
     position: 'absolute',
@@ -128,6 +178,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
     color: '#ffffff',
     marginVertical: 20
+  },
+  input: {
+    backgroundColor: 'transparent',
+    fontSize: 24,
+    fontFamily: 'Montserrat-Bold',
+    textAlign: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#40A900',
+    margin: 20,
+    textDecorationLine: 'none'
   }
 })
 

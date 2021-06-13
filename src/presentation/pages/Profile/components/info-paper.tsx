@@ -1,8 +1,9 @@
-import React from 'react'
-import {Image, StyleSheet, Text, View} from 'react-native'
+import React, { useContext } from 'react'
+import {Image, StyleSheet, Text, View, TextInput} from 'react-native'
 
 import { Icon } from '../../../components'
 import { IconName } from '../../../components/icon'
+import { ProfileContext } from '../../../contexts'
 
 import twitchLogo from '../../../../../assets/twitch.png'
 
@@ -11,29 +12,48 @@ type Variant = 'name' | 'email' | 'twitch'
 type Props = {
   variant?: Variant
   text: string
+  edit?: boolean
 }
 
-const InfoPaper: React.FC<Props> = ({variant, text}: Props) => {
+const InfoPaper: React.FC<Props> = ({variant, text, edit}: Props) => {
+
+  const { editedUser, setEditedUser } = useContext(ProfileContext)
 
   const getVariant = (): any => {
     switch (variant) {
       case 'email': 
         return (
-          <View style={styles.content}>
+          <View style={[styles.content, edit && {borderColor: '#49ff00'}]}>
             <View style={{position: 'absolute', left: 15}}>
               <Icon name={IconName.email} color='#999999' />
             </View>
-            <Text style={styles.text}>{text}</Text>
+            {
+            !edit
+              ? <Text style={styles.text}>{text}</Text>
+              : <TextInput 
+                  style={styles.input}
+                  defaultValue={text}
+                  onChangeText={email => setEditedUser({ ...editedUser, email })}
+                />
+            }
           </View>
         )
 
       case 'name':
         return (
-          <View style={styles.content}>
+          <View style={[styles.content, edit && {borderColor: '#49ff00'}]}>
             <View style={{position: 'absolute', left: 15}}>
               <Icon name={IconName.person} color='#999999' />
             </View>
-            <Text style={styles.text}>{text}</Text>
+            {
+            !edit
+              ? <Text style={styles.text}>{text}</Text>
+              : <TextInput 
+                  style={styles.input}
+                  defaultValue={text}
+                  onChangeText={name => setEditedUser({ ...editedUser, name })}
+                />
+            }
           </View>
         )
         
@@ -48,7 +68,7 @@ const InfoPaper: React.FC<Props> = ({variant, text}: Props) => {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, edit && { borderColor: '#49ff00', shadowColor: '#49ff00' }]}>
       {getVariant()}
     </View>
   )
@@ -88,6 +108,14 @@ const styles = StyleSheet.create({
   image: {
     position: 'absolute',
     left: 5
+  },
+  input: {
+    backgroundColor: 'transparent',
+    fontSize: 20,
+    width: '100%',
+    fontFamily: 'Montserrat-Bold',
+    textAlign: 'center',
+    textDecorationLine: 'none'
   }
 })
 
