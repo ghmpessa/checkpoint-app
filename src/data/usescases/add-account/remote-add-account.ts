@@ -1,7 +1,7 @@
-import { AddAccount, AddAccountParams } from '../../domain/usecases'
-import { HttpClient, HttpStatusCode } from '../protocols'
-import { UnexpectedError, InvalidParamError, ServerError } from '../../domain/errors'
-import { AccountModel } from '../../domain/models'
+import { AddAccount, AddAccountParams } from '../../../domain/usecases'
+import { HttpClient, HttpStatusCode } from '../../protocols'
+import { UnexpectedError, InvalidParamError, ServerError } from '../../../domain/errors'
+import { AccountModel } from '../../../domain/models'
 
 export class RemoteAddAccount implements AddAccount {
   constructor(
