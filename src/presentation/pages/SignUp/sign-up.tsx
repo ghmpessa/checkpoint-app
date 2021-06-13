@@ -28,6 +28,7 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
     emailError: '',
     passwordError: ''
   })
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const usernameError = validation.validate('username', user)
@@ -42,6 +43,28 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
       passwordError
       })
   }, [user])
+
+  const formInvalid = !!error.usernameError || !!error.nameError || !!error.emailError || !!error.passwordError
+
+  const handleRegister = (): void => {
+    try {
+      if (loading) {
+        return
+      }
+
+      setLoading(true)
+
+      addAccount.add(user)
+
+      setLoading(false)
+      Alert.alert('Done!', 'Your account have been created!', [{
+        text: 'login', onPress: () => navigation.navigate('Login') 
+      }])
+
+    } catch (error) {
+      Alert.alert('Error!', error.message)
+    }
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -69,11 +92,13 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
             error={!!error.emailError}
             message={error.emailError || undefined}
             style={{backgroundColor: '#202020', marginVertical: 20}}
+            autoCapitalize='none'
             label='e-mail'
             underlineColor='#40A900'
             onChangeText={email => setUser({...user, email })}
             />
           <Input
+            secureTextEntry
             error={!!error.passwordError}
             message={error.passwordError || undefined}
             label='password'
@@ -82,8 +107,10 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
             onChangeText={password => setUser({...user, password })}
             />
           <Button
+            disabled={formInvalid}
+            onPress={handleRegister}
             title='sign up'
-            style={styles.button}
+            style={[styles.button, formInvalid && { backgroundColor: '#c2c2c2' }]}
           />
       </ScrollView>
       <View style={styles.member}>
@@ -127,8 +154,7 @@ const styles = StyleSheet.create({
     padding: 20
   },
   button: {
-    paddingVertical: 20,
-    flex: 1,
+    padding: 20,
     backgroundColor: '#40A900',
     alignItems: 'center',
     justifyContent: 'center',

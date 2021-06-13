@@ -2,8 +2,7 @@ import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import BottomTabs from './bottom-tabs'
 import AuthRoutes from './tab.routes'
-import { makeLogin } from '../factories/pages'
-import { SignUp } from '../../presentation/pages'
+import { makeLogin, makeSignUp } from '../factories/pages'
 
 const Stack = createStackNavigator()
 
@@ -18,16 +17,12 @@ const AppRoutes: React.FC = () => {
         component={makeLogin}
       />
       <Stack.Screen
-        name='Home'
-        component={BottomTabs}
-      />
-      <Stack.Screen
-        name='Community'
+        name='Main'
         component={BottomTabs}
       />
       <Stack.Screen
         name='SignUp'
-        component={SignUp}
+        component={makeSignUp}
       />
     </Stack.Navigator>
   )

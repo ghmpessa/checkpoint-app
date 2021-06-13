@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, TouchableOpacityProps, ActivityIndicator } from 'react-native'
 import { Icon } from '.'
 import { IconName } from './icon'
 
@@ -10,18 +10,21 @@ interface Props extends TouchableOpacityProps {
   buttonHeight?: number,
   handleClick?: () => void,
   icon?: IconName
+  disabled?: boolean
+  loading?: boolean
 }
 
-const Button: React.FC<Props> = ({ title, text = false, fontSize = 20, buttonHeight, handleClick, icon, ...rest }: Props) => {
+const Button: React.FC<Props> = ({ title, text = false, fontSize = 20, buttonHeight, handleClick, icon, disabled = false, loading = false, ...rest }: Props) => {
   return (
     <TouchableOpacity
+      disabled={disabled}
       activeOpacity={0.5}
-      style={text ? styles.textButton : [styles.container, buttonHeight && { height: buttonHeight }]}
+      style={text ? styles.textButton : [styles.container, buttonHeight && { height: buttonHeight }, disabled && {backgroundColor: '#c2c2c2'}]}
       onPress={handleClick}
       {...rest}
     >
       {icon && <Icon name={icon} size={25} color='#ffffff'/>}
-      <Text style={[styles.text, text && styles.textColor, { fontSize: fontSize }]}>{title}</Text>
+      { loading ? <ActivityIndicator size='small' color='#fff' /> : <Text style={[styles.text, text && styles.textColor, { fontSize: fontSize }]}>{title}</Text>}
     </TouchableOpacity >
   )
 }

@@ -46,12 +46,14 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
       }
       setLoading(true)
 
-      const account = authentication.auth(userInput)
+      authentication.auth(userInput)
+      setLoading(false)
 
-      navigation.navigate('Home')
+      navigation.navigate('Main')
 
     } catch (error) {
       Alert.alert('Login error!', error.message)
+      setLoading(false)
     }
   }
 
@@ -69,8 +71,9 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
               error={!!error.username}
               message={error.username || undefined}
               value={userInput.username}
+              autoCapitalize='none'
               mode='outlined'
-              label='e-mail'
+              label='username'
               onChangeText={username => setUserInput({ ...userInput, username })}
             />
             <Input
@@ -84,6 +87,7 @@ const Login: React.FC<Props> = ({ validation, authentication }: Props) => {
             <View style={styles.button}>
               <Button
                 disabled={formInvalid}
+                loading={loading}
                 onPress={handleLogin}
                 buttonHeight={48}
                 title='login' />
