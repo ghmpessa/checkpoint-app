@@ -11,12 +11,12 @@ const SignUp: React.FC = () => {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <IconButton style={styles.iconButton} iconName={IconName.back} iconColor='#ffffff' />
+        <IconButton onPress={() => navigation.goBack()} style={styles.iconButton} iconName={IconName.back} iconColor='#ffffff' />
         <Text style={styles.title}>checkpoint</Text>
         <Text style={styles.subtitle}>Sign Up</Text>
           <Input
             style={{backgroundColor: '#202020', marginVertical: 20}}
-            label='username'
+            label='name'
             underlineColor='#40A900'
           />
           <Input
@@ -24,16 +24,19 @@ const SignUp: React.FC = () => {
             label='e-mail'
             underlineColor='#40A900' />
           <Input
-            label='name'
+            label='nickname'
             style={{backgroundColor: '#202020', marginVertical: 20}}
             underlineColor='#40A900' />
           <Input 
+            label='nickname'
             style={{backgroundColor: '#202020', marginVertical: 20}}
             underlineColor='#40A900'/>
           <Input
+            label='password'
             style={{backgroundColor: '#202020', marginVertical: 20}}
             underlineColor='#40A900' />
           <Input
+            label='confirm password'
             style={{backgroundColor: '#202020', marginVertical: 20}}
             underlineColor='#40A900' />
           <Button
