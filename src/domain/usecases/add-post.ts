@@ -6,5 +6,5 @@ export type PostParams = {
 }
 
 export interface AddPost {
-  post: (params: PostParams) => Promise<PostModel>
+  post: (params: PostParams) => Promise<PostModel[]>
 }

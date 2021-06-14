@@ -6,10 +6,10 @@ import { PostModel } from '../../../domain/models'
 export class RemoteAddPost implements AddPost {
   constructor(
     private readonly url: string,
-    private readonly httpClient: HttpClient<PostModel>
+    private readonly httpClient: HttpClient<PostModel[]>
   ) { }
 
-  async post(params: PostParams): Promise<PostModel> {
+  async post(params: PostParams): Promise<PostModel[]> {
     const httpResponse = await this.httpClient.request({
       url: this.url,
       body: params,

@@ -5,28 +5,34 @@ import { Button, Load } from '../../components'
 
 import icon from '../../../../assets/generic.png'
 import PostCard from './components/post-card'
-import { JoinGroup, LoadMembers, LoadPosts } from '@/domain/usecases'
+import { AddPost, JoinGroup, LoadMembers, LoadPosts } from '@/domain/usecases'
 import { useNavigation, useRoute } from '@react-navigation/native'
 import { GroupModel, PostModel, ProfileShortModel } from '../../../domain/models'
 import MemberCard from './components/member-card'
+import { GroupContext } from '../../contexts'
+import PostModal from './components/post-modal'
 
 type Props = {
   joinGroup: JoinGroup
   loadMembers: LoadMembers
   loadPosts: LoadPosts
+  addPost: AddPost
 }
 
 interface Params {
   group: GroupModel
 }
 
-const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts }: Props) => {
+const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts, addPost }: Props) => {
   const navigation = useNavigation()
 
   const [joined, setJoined] = useState(false)
+  const [visible, setVisible] = useState(false)
+  const [text, setText] = useState('')
   const [loading, setLoading] = useState({
     page: true,
-    feed: false
+    feed: false,
+    post: false
   })
   const [selected, setSelected] = useState({
     feed: true,
@@ -68,7 +74,6 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts }: Props) =>
   const fetchPosts = async (loadType: string = 'page'): Promise<void> => {
     try {
       const posts = await loadPosts.load(group.id)
-      console.log(posts)
       setPosts(posts)
       setLoading({...loading, [loadType]: false})
     } catch (error) {
@@ -83,9 +88,30 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts }: Props) =>
     fetchPosts('feed')
   }
 
+  const handlePost = async (): Promise<void> => {
+    try {
+      if (loading.post) {
+        return
+      }
+
+      setLoading({...loading, post: true})
+      const newPost = await addPost.post({
+        text,
+        groupId: group.id
+      })
+
+      setPosts([...posts, ...newPost])
+      setVisible(!visible)
+      setLoading({...loading, post: false})
+    } catch (error) {
+      setLoading({...loading, post: false})
+      Alert.alert('Error!', error.message)
+    }
+  }
+
   useEffect(() => {
     fetchPosts()
-  }, [])
+  }, [posts])
 
   if (loading.page) {
     return <Load />
@@ -93,37 +119,43 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts }: Props) =>
 
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <View style={styles.header}>
-          <Image style={styles.image} source={icon} />
-          <Text style={styles.title}>{group.name}</Text>
-          <Text style={styles.subtitle}>{`#${group.tag}`}</Text>
-          <Text style={styles.subtitle}>{`Created at: ${new Date(group.createdAt).toLocaleDateString()}`}</Text>
-          <Button 
-            handleClick={handleJoin}
-            title={joined ? 'quit group' : 'join group'}
-          />
-        </View>
-        <View style={styles.buttonsWrap}>
-          <TouchableOpacity onPress={handleClick} style={styles.buttonLeft}>
-            <Text style={[styles.buttonsText, selected.feed && {color: '#49ff00'}]}>feed</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleMembers} style={styles.buttonRight}>
-            <Text style={[styles.buttonsText, selected.members &&  {color: '#49ff00'}]}>members</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={{ flex: 1}}>
-          {loading.feed
-            ? <ActivityIndicator color='#49ff00' size={30} /> 
-              : selected.feed 
-                ? posts.map(item => (
-                  <PostCard post={item} />
-                ))
-                : members.map(member => (
-                  <MemberCard member={member} handleClick={() => navigation.navigate('MemberProfile', { userId: member.id })} />
-                ))}
-        </View>
-      </ScrollView>
+      <GroupContext.Provider value={{ visible, setVisible, text, setText, loading, setLoading }}>
+        <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+          <View style={styles.header}>
+            <Image style={styles.image} source={icon} />
+            <Text style={styles.title}>{group.name}</Text>
+            <Text style={styles.subtitle}>{`#${group.tag}`}</Text>
+            <Text style={styles.subtitle}>{`Created at: ${new Date(group.createdAt).toLocaleDateString()}`}</Text>
+            <Button 
+              handleClick={handleJoin}
+              title={joined ? 'quit group' : 'join group'}
+            />
+          </View>
+          <View style={styles.buttonsWrap}>
+            <TouchableOpacity onPress={handleClick} style={styles.buttonLeft}>
+              <Text style={[styles.buttonsText, selected.feed && {color: '#49ff00'}]}>feed</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleMembers} style={styles.buttonRight}>
+              <Text style={[styles.buttonsText, selected.members &&  {color: '#49ff00'}]}>members</Text>
+            </TouchableOpacity>
+          </View>
+          <View style={{ flex: 1}}>
+            {loading.feed
+              ? <ActivityIndicator color='#49ff00' size={30} /> 
+                : selected.feed 
+                  ? <>
+                  <Button title='add post' text style={styles.addPostButton} onPress={() => setVisible(!visible)} />
+                    {posts.map(item => (
+                      <PostCard post={item} />
+                    ))}
+                  </>
+                  : members.map(member => (
+                    <MemberCard member={member} handleClick={() => navigation.navigate('MemberProfile', { userId: member.id })} />
+                  ))}
+          </View>
+        </ScrollView>
+        <PostModal handlePost={handlePost} />
+      </GroupContext.Provider>
     </SafeAreaView>
   )
 }
@@ -131,6 +163,7 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts }: Props) =>
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    flexGrow: 1,
     backgroundColor: '#161616'
   },
   title: {
@@ -186,6 +219,16 @@ const styles = StyleSheet.create({
     fontFamily: 'Montserrat-Bold',
     fontSize: 18,
     color: '#f2f2f2'
+  },
+  addPostButton: {
+    backgroundColor: 'transparent',
+    borderWidth: 1,
+    borderColor: '#49ff00',
+    borderRadius: 8,
+    alignItems: 'center',
+    padding: 10,
+    marginHorizontal: 30,
+    marginVertical: 10
   }
 })
 
