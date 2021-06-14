@@ -19,7 +19,7 @@ const Button: React.FC<Props> = ({ title, text = false, fontSize = 20, buttonHei
     <TouchableOpacity
       disabled={disabled}
       activeOpacity={0.5}
-      style={text ? styles.textButton : [styles.container, buttonHeight && { height: buttonHeight }, disabled && {backgroundColor: '#c2c2c2'}]}
+      style={text ? styles.textButton : [styles.container, disabled && {backgroundColor: '#c2c2c2'}]}
       onPress={handleClick}
       {...rest}
     >
@@ -36,9 +36,8 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#40A900',
-    marginHorizontal: 10,
-    marginTop: 10,
-    paddingHorizontal: 10
+    margin: 10,
+    padding: 10
   },
   text: {
     color: 'white',
