@@ -6,15 +6,14 @@ import { CommunityContext } from '../../../contexts'
 import { Input, Icon, IconButton, Button } from '../../../components'
 import { IconName } from '../../../components/icon'
 
-const CreateGroupModal: React.FC = () => {
-  const [group, setGroup] = useState({
-    name: '',
-    description: '',
-    game: ''
-  })
+type Props = {
+  handlePress: () => void
+}
+
+const CreateGroupModal: React.FC<Props> = ({ handlePress }: Props) => {
   const [gamesVisible, setGamesVisible] = useState(false)
 
-  const {visible, setVisible} = useContext(CommunityContext)
+  const { visible, setVisible, group, setGroup } = useContext(CommunityContext)
 
   const games = ['F1 2020', 'Counter-Strike: Global Offensive', 'League of Legends', 'Valorant', 'GTA V', 'Fifa21', 'Free Fire', 'Rainbow6 Siege', 'Fall Guys', 'World of Warcraft', 'The Elder Scrolls Online', 'Apex Legends', 'COD: Warzone']
 
@@ -43,6 +42,7 @@ const CreateGroupModal: React.FC = () => {
               style={styles.input}
               label='group name'
               underlineColor='#40A900'
+              onChangeText={name => setGroup({...group, name})}
             />
             <Input
               style={styles.input}
@@ -50,6 +50,7 @@ const CreateGroupModal: React.FC = () => {
               multiline
               numberOfLines={4}
               underlineColor='#40A900'
+              onChangeText={description => setGroup({...group, description})}
             />
             <TouchableOpacity
               activeOpacity={0.5}
@@ -87,6 +88,7 @@ const CreateGroupModal: React.FC = () => {
             <Button
               style={styles.modalButtonWrap}
               title='create group'
+              onPress={handlePress}
             >
           </Button>
       </View>
@@ -113,7 +115,7 @@ const styles = StyleSheet.create({
     height: '80%',
     position: 'absolute',
     bottom: 0,
-    backgroundColor: '#121212',
+    backgroundColor: '#242424',
     borderTopRightRadius: 20,
     borderTopLeftRadius: 20,
     justifyContent: 'center',
@@ -190,7 +192,7 @@ const styles = StyleSheet.create({
     color: '#ffffff'
   },
   input: {
-    backgroundColor: '#151515',
+    backgroundColor: '#242424',
     marginVertical: 10
   }
 })
