@@ -20,7 +20,9 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
     username: '',
     name: '',
     email: '',
-    password: ''
+    password: '',
+    twitch: '',
+    steam: ''
   })
   const [error, setError] = useState({
     usernameError: '',
@@ -106,6 +108,20 @@ const SignUp: React.FC<Props> = ({validation, addAccount}: Props) => {
             underlineColor='#40A900'
             onChangeText={password => setUser({...user, password })}
             />
+            <Input
+              label='twitch link'
+              autoCapitalize='none'
+              style={{backgroundColor: '#202020', marginVertical: 20}}
+              underlineColor='#40A900'
+              onChangeText={twitch => setUser({...user, twitch })}
+              />
+              <Input
+                label='steam link'
+                autoCapitalize='none'
+                style={{backgroundColor: '#202020', marginVertical: 20}}
+                underlineColor='#40A900'
+                onChangeText={steam => setUser({...user, steam })}
+                />
           <Button
             disabled={formInvalid}
             onPress={handleRegister}

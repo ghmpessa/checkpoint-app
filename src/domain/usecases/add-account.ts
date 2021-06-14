@@ -5,6 +5,8 @@ export type AddAccountParams = {
   name: string
   email: string
   password: string
+  twitch?: string
+  steam?: string
 }
 
 export interface AddAccount {
