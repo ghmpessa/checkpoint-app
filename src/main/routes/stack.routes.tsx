@@ -2,7 +2,7 @@ import React, { useContext, useRef, useEffect }  from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
 import BottomTabs from './bottom-tabs'
 import AuthRoutes from './tab.routes'
-import { makeGroup, makeLogin, makeSignUp } from '../factories/pages'
+import { makeGroup, makeLogin, makeMemberProfile, makeSignUp } from '../factories/pages'
 import { Group } from '../../presentation/pages'
 import { ApiContext } from './../../presentation/contexts'
 
@@ -41,6 +41,10 @@ const AppRoutes: React.FC = () => {
       <Stack.Screen
         name='Group'
         component={makeGroup}
+      />
+      <Stack.Screen
+        name='MemberProfile'
+        component={makeMemberProfile}
       />
     </Stack.Navigator>
   )

@@ -3,7 +3,7 @@ import { StyleSheet, View, Text, SafeAreaView, Image, FlatList, Alert, Touchable
 
 import { Button, Load } from '../../components'
 
-import valorant from '../../../../assets/valorant.png'
+import icon from '../../../../assets/generic.png'
 import PostCard from '../Home/components/post-card'
 import { JoinGroup, LoadMembers } from '@/domain/usecases'
 import { useNavigation, useRoute } from '@react-navigation/native'
@@ -22,6 +22,7 @@ interface Params {
 const Group: React.FC<Props> = ({ joinGroup, loadMembers }: Props) => {
   const navigation = useNavigation()
 
+  const [joined, setJoined] = useState(false)
   const [loading, setLoading] = useState({
     page: true,
     feed: false
@@ -36,8 +37,9 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers }: Props) => {
 
   const handleJoin = async (): Promise<void> => {
     try {
+      setJoined(!joined)
       joinGroup.join({
-        bind: true,
+        bind: !joined,
         groupId: group.id
       })
     } catch (error) {
@@ -72,13 +74,13 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers }: Props) => {
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
-        <Image style={styles.image} source={valorant} />
+        <Image style={styles.image} source={icon} />
         <Text style={styles.title}>{group.name}</Text>
         <Text style={styles.subtitle}>{`#${group.tag}`}</Text>
         <Text style={styles.subtitle}>{`Created at: ${new Date(group.createdAt).toLocaleDateString()}`}</Text>
         <Button 
           handleClick={handleJoin}
-          title='join group'
+          title={joined ? 'quit group' : 'join group'}
         />
       </View>
       <View style={styles.buttonsWrap}>
@@ -103,7 +105,7 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers }: Props) => {
                 data={members}
                 keyExtractor={member => member.id}
                 renderItem={({ item }) => (
-                  <MemberCard member={item} />
+                  <MemberCard handleClick={() => navigation.navigate('MemberProfile', { userId: item.id })} member={item} />
                 )}
               />}
       </View>
@@ -131,8 +133,8 @@ const styles = StyleSheet.create({
     marginVertical: 5
   },
   image: {
-    height: 50,
-    width: 50,
+    height: 64,
+    width: 64,
     alignSelf: 'center'
   },
   header: {

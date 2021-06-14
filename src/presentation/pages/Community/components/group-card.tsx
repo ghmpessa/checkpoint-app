@@ -10,6 +10,7 @@ import Animated from 'react-native-reanimated'
 import csgoLogo from '../../../../../assets/cs.png'
 import valorantLogo from '../../../../../assets/valorant.png'
 import lolLogo from '../../../../../assets/apex.png'
+import icon from '../../../../../assets/generic.png'
 import { GroupModel } from '../../../../domain/models'
 
 export enum GameLogos {
@@ -32,7 +33,7 @@ const GroupCard: React.FC<Props> = ({ group, game, handleClick }: Props) => {
       activeOpacity={0.5}
       onPress={handleClick}
     >
-      <Image style={styles.image} source={game} />
+      <Image style={styles.image} source={icon} />
       <View style={styles.info}>
         <Text numberOfLines={2} style={styles.nick}>
           {group.name}
@@ -59,11 +60,12 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#666666'
+    borderColor: '#666666',
+    paddingHorizontal: 10
   },
   image: {
-    height: 110,
-    width: 110,
+    height: 80,
+    width: 80,
     alignSelf: 'center'
   },
   info: {
