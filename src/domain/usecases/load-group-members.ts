@@ -1,5 +1,5 @@
 import { ProfileShortModel } from '../models'
 
-export interface LoadMember {
+export interface LoadMembers {
   load: (groupId: string) => Promise<ProfileShortModel[]>
 }
