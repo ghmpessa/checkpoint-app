@@ -1,25 +1,30 @@
-import { IconName } from '../../../components/icon'
 import React from 'react'
 import { View, Text, StyleSheet } from 'react-native'
+import { IconName } from '../../../components/icon'
 
 import { Button, Avatar } from '../../../components'
 import IconButton from './icon-button'
+import { PostModel } from '../../../../domain/models'
 
-const PostCard: React.FC = () => {
+type Props = {
+  post: PostModel
+}
+
+const PostCard: React.FC<Props> = ({ post }: Props) => {
   return (
     <View style={styles.container}>
       <View style={styles.postHeader}>
         <Avatar label='V' size={45} badgeSize={20} badgeColor='#000000' />
         <View style={styles.headerText}>
-          <Text style={styles.name}>O Verdadeiro</Text>
-          <Text style={styles.time}>7h - was playing CS:GO</Text>
+          <Text style={styles.name}>{post.account.username}</Text>
+          <Text style={styles.time}>{new Date().getHours() -  new Date(post.createdAt).getHours()}</Text>
         </View>
       </View>
-      <Text style={styles.postInfo}>Eu honestamente gostaria de saber o que acontece na cabeça desse pessoal</Text>
+      <Text style={styles.postInfo}>{post.text}</Text>
       <View style={styles.postActions}>
         <IconButton iconName={IconName.account} />
         <IconButton iconName={IconName.share} />
-        <Button title='open' />
+        <Button title='open' fontSize={16} />
       </View>
     </View>
   )

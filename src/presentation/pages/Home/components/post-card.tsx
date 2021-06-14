@@ -19,7 +19,7 @@ const PostCard: React.FC = () => {
       <View style={styles.postActions}>
         <IconButton iconName={IconName.account} />
         <IconButton iconName={IconName.share} />
-        <Button title='open' fontSize={16} />
+        <Button title='open' />
       </View>
     </View>
   )

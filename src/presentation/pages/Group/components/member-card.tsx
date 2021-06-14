@@ -33,7 +33,6 @@ const MemberCard: React.FC<Props> = ({ member, handleClick }: Props) => {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     backgroundColor: '#242424',
     shadowColor: '#ffffff',
