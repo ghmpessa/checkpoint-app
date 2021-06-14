@@ -1,18 +1,36 @@
 import React from 'react'
-import { StyleSheet, View, Text, SafeAreaView, Image, FlatList } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, Image, FlatList, Alert } from 'react-native'
 
 import { Button } from '../../components'
 
 import valorant from '../../../../assets/valorant.png'
 import PostCard from '../Home/components/post-card'
+import { JoinGroup } from '@/domain/usecases'
 
-const Group: React.FC = () => {
+type Props = {
+  joinGroup: JoinGroup
+}
+
+const Group: React.FC<Props> = ({ joinGroup }: Props) => {
+
+  const handleJoin = async (): Promise<void> => {
+    try {
+      joinGroup.join({
+        bind: true,
+        groupId: 'aaaa'
+      })
+    } catch (error) {
+      Alert.alert('Error!', error.message)
+    }
+  }
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Image style={styles.image} source={valorant} />
         <Text style={styles.title}>Jogadores ruins de Valorant</Text>
         <Button 
+          handleClick={handleJoin}
           title='join group'
         />
       </View>

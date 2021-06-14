@@ -3,6 +3,7 @@ import { createMaterialBottomTabNavigator } from '@react-navigation/material-bot
 import { Community, Home } from '../../presentation/pages'
 import { IconName } from '../../presentation/components/icon'
 import { makeProfile } from '../factories/pages'
+import { makeCommunity } from '../factories/pages/community/community-factory'
 
 const BottomTabs: React.FC = () => {
 
@@ -31,7 +32,7 @@ const BottomTabs: React.FC = () => {
       />
       <Tab.Screen
         name="Community"
-        component={Community}
+        component={makeCommunity}
         options={{
           tabBarIcon: IconName.group,
         }}
