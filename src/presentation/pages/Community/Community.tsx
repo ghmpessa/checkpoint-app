@@ -1,23 +1,28 @@
 import React, { useState } from 'react'
 import { Button, Input } from '../../components'
-import { FlatList, StyleSheet, View, Alert } from 'react-native'
+import { FlatList, StyleSheet, View, Alert, ActivityIndicator } from 'react-native'
 import { TextInput } from 'react-native-paper'
 
 import {CommunityContext} from '../../contexts'
 import CreateGroupModal from './components/create-group-modal'
 import { IconName } from '../../components/icon'
-import { CreateGroup } from '../../../domain/usecases'
+import { CreateGroup, LoadGroups } from '../../../domain/usecases'
 import GroupCard, { GameLogos } from './components/group-card'
 import { Fragment } from 'react'
 import { useNavigation } from '@react-navigation/native'
+import { GroupModel } from '@/domain/models'
+import { useEffect } from 'react'
 
 type Props = {
   createGroup: CreateGroup
+  loadGroups: LoadGroups
 }
 
-const Home: React.FC<Props> = ({ createGroup }: Props) => {
+const Home: React.FC<Props> = ({ createGroup, loadGroups }: Props) => {
   const [visible, setVisible] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [search, setSearch] = useState('')
+  const [groups, setGroups] = useState<GroupModel[]>([])
   const [group, setGroup] = useState({
     name: '',
     description: '',
@@ -48,17 +53,36 @@ const Home: React.FC<Props> = ({ createGroup }: Props) => {
     navigation.navigate('Group')
   }
 
+  const handleSearch = async (): Promise<void> => {
+    try {
+      if (loading) {
+        return
+      }
+
+      setLoading(true)
+      const groups = await loadGroups.load({ search })
+      setGroups(groups)
+      setLoading(false)
+
+    } catch (error) {
+      setLoading(false)
+      Alert.alert('Error!', error.message)
+    }
+  }
+
   return (
     <View style={styles.container}>
       <Input
         mode='outlined'
         style={styles.search}
         placeholder='find groups...'
+        onChangeText={text => setSearch(text)}
         right={
           <TextInput.Icon
             name='magnify'
             color='#ffffff'
             size={25}
+            onPress={handleSearch}
           />
         }
       />
@@ -73,15 +97,18 @@ const Home: React.FC<Props> = ({ createGroup }: Props) => {
       </View>
 
       <View style={styles.list}>
-      <FlatList
-      data={[1, 2, 3, 4, 5, 6]}
-      showsVerticalScrollIndicator={false}
-      renderItem={({ item }) => (
-        <Fragment key={item}>
-          <GroupCard handleClick={handleClick} groupName='Jogadores ruins de Valorant' game={GameLogos.valorant} />
-        </Fragment>
-        )}
-        />
+        {
+        !loading 
+          ? <FlatList
+              data={groups}
+              keyExtractor={group => group.id}
+              showsVerticalScrollIndicator={false}
+              renderItem={({ item }) => (
+                <GroupCard handleClick={handleClick} group={item} game={GameLogos.valorant} />
+                )}
+              />
+          : <ActivityIndicator color='#40A900' size={30} />
+        }
       </View>
       <CommunityContext.Provider value={{ visible, setVisible, group, setGroup }}>
         <CreateGroupModal handlePress={handleCreate} />

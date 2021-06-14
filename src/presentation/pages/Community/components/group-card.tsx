@@ -10,6 +10,7 @@ import Animated from 'react-native-reanimated'
 import csgoLogo from '../../../../../assets/cs.png'
 import valorantLogo from '../../../../../assets/valorant.png'
 import lolLogo from '../../../../../assets/apex.png'
+import { GroupModel } from '../../../../domain/models'
 
 export enum GameLogos {
   cs = csgoLogo,
@@ -18,12 +19,12 @@ export enum GameLogos {
 }
 
 type Props = {
-  groupName: string
+  group: GroupModel
   game?: GameLogos
   handleClick?: () => void
 }
 
-const GroupCard: React.FC<Props> = ({ groupName, game, handleClick }: Props) => {
+const GroupCard: React.FC<Props> = ({ group, game, handleClick }: Props) => {
 
   return (
     <TouchableOpacity
@@ -34,7 +35,7 @@ const GroupCard: React.FC<Props> = ({ groupName, game, handleClick }: Props) => 
       <Image style={styles.image} source={game} />
       <View style={styles.info}>
         <Text numberOfLines={2} style={styles.nick}>
-          {groupName}
+          {group.name}
         </Text>
       </View>
     </TouchableOpacity>
