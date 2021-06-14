@@ -4,4 +4,6 @@ export type GroupModel = {
   tag: string
   adminId: string
   bindingId: string
+  createdAt: string
+  updatedAt: string
 }

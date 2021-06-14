@@ -49,8 +49,8 @@ const Home: React.FC<Props> = ({ createGroup, loadGroups }: Props) => {
     }
   }
 
-  const handleClick = (): void => {
-    navigation.navigate('Group')
+  const handleClick = (group: GroupModel): void => {
+    navigation.navigate('Group', { group })
   }
 
   const handleSearch = async (): Promise<void> => {
@@ -104,7 +104,7 @@ const Home: React.FC<Props> = ({ createGroup, loadGroups }: Props) => {
               keyExtractor={group => group.id}
               showsVerticalScrollIndicator={false}
               renderItem={({ item }) => (
-                <GroupCard handleClick={handleClick} group={item} game={GameLogos.valorant} />
+                <GroupCard handleClick={() => handleClick(item)} group={item} game={GameLogos.valorant} />
                 )}
               />
           : <ActivityIndicator color='#40A900' size={30} />

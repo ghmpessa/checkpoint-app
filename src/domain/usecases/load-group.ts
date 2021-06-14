@@ -1,5 +1,5 @@
-import { ProfileModel } from '../models'
+import { GroupModel } from '../models'
 
 export interface LoadGroup {
-  load: (groupId: string) => Promise<ProfileModel[]>
+  load: (groupId: string) => Promise<GroupModel>
 }

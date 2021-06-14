@@ -37,6 +37,12 @@ const GroupCard: React.FC<Props> = ({ group, game, handleClick }: Props) => {
         <Text numberOfLines={2} style={styles.nick}>
           {group.name}
         </Text>
+        <Text style={styles.rank}>
+          {`Tag: #${group.tag}`}
+        </Text>
+        <Text style={styles.rank}>
+          {`Created at: ${new Date(group.createdAt).toLocaleDateString()}`}
+        </Text>
       </View>
     </TouchableOpacity>
   )

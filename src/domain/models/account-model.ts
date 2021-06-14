@@ -13,3 +13,9 @@ export type ProfileModel = {
   createdAt?: string
   updatedAt?: string
 }
+
+export type ProfileShortModel = {
+  id?: string
+  username?: string
+  name?: string
+}
