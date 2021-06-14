@@ -6,16 +6,19 @@ import { Avatar, Button, IconButton, Load } from '../../components'
 import InfoPaper from './components/info-paper'
 import GameCard, { GameLogos } from './components/game-card'
 import { ApiContext, ProfileContext } from '../../contexts'
-import { EditAccount, LoadAccount } from '@/domain/usecases'
+import { EditAccount, LoadAccount, LoadMyGroups } from '@/domain/usecases'
 import { useState } from 'react'
-import { ProfileModel } from '@/domain/models'
+import { GroupModel, ProfileModel } from '@/domain/models'
+import GroupCard from './components/group-card'
+import { useNavigation } from '@react-navigation/native'
 
 type Props = {
   loadAccount: LoadAccount
   editAccount: EditAccount
+  loadMyGroups: LoadMyGroups
 }
 
-const Profile: React.FC<Props> = ({ loadAccount, editAccount }: Props) => {
+const Profile: React.FC<Props> = ({ loadAccount, editAccount, loadMyGroups }: Props) => {
   const { getCurrentAccount } = useContext(ApiContext)
 
   const [loading, setLoading] = useState({
@@ -31,10 +34,13 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount }: Props) => {
     createdAt: '',
     updatedAt: ''
   })
+  const [groups, setGroups] = useState<GroupModel[]>([])
 
   const [editedUser, setEditedUser] = useState<ProfileModel>()
 
   const [edit, setEdit] = useState(false)
+
+  const navigation = useNavigation()
 
   const games = [
   {
@@ -62,6 +68,18 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount }: Props) => {
           setLoading({...loading, page: false})
           Alert.alert('Error!', error.message)
         })
+      })
+  }, [])
+
+  useEffect(() => {
+    loadMyGroups.load()
+      .then(groups => {
+        setGroups(groups)
+        setLoading({...loading, page: false})
+      })
+      .catch(error => {
+        setLoading({...loading, page: false})
+        Alert.alert('Error!', error.message)
       })
   }, [])
 
@@ -132,10 +150,16 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount }: Props) => {
           { edit && <Button title='save' buttonHeight={50} fontSize={24} handleClick={handleClick} loading={loading.edit} />}
 
           <Text style={styles.gamesTitle}>my games</Text>
-
           <View style={{flex: 1}}>
             {games.map(game => (
               <GameCard info={game} />
+            ))}
+          </View>
+
+          <Text style={styles.gamesTitle}>my groups</Text>
+          <View style={{flex: 1}}>
+            {groups.map(group => (
+              <GroupCard handleClick={() => navigation.navigate('Group', { group })} group={group} />
             ))}
           </View>
 
