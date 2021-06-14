@@ -3,23 +3,25 @@ import { Text, View, StyleSheet,ScrollView, TextInput, Alert } from 'react-nativ
 
 import { IconName } from '../../components/icon'
 import { Avatar, Button, IconButton, Load } from '../../components'
-import InfoPaper from './components/info-paper'
+import InfoPaper, { UserInfos } from './components/info-paper'
 import GameCard, { GameLogos } from './components/game-card'
 import { ApiContext, ProfileContext } from '../../contexts'
-import { EditAccount, LoadAccount, LoadMyGroups } from '@/domain/usecases'
+import { EditAccount, LoadAccount, LoadMe, LoadMyGroups } from '@/domain/usecases'
 import { useState } from 'react'
 import { GroupModel, ProfileModel } from '@/domain/models'
 import GroupCard from './components/group-card'
 import { useNavigation } from '@react-navigation/native'
 
 type Props = {
-  loadAccount: LoadAccount
+  loadMe: LoadMe
   editAccount: EditAccount
   loadMyGroups: LoadMyGroups
 }
 
-const Profile: React.FC<Props> = ({ loadAccount, editAccount, loadMyGroups }: Props) => {
+const Profile: React.FC<Props> = ({ loadMe, editAccount, loadMyGroups }: Props) => {
   const { getCurrentAccount } = useContext(ApiContext)
+
+  const userInfos = ['name', 'email', 'twitch', 'steam']
 
   const [loading, setLoading] = useState({
     page: true,
@@ -32,11 +34,16 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount, loadMyGroups }: Pr
     email: '',
     avatarPath: '',
     createdAt: '',
-    updatedAt: ''
+    updatedAt: '',
+    twitch: '',
+    steam: ''
   })
   const [groups, setGroups] = useState<GroupModel[]>([])
 
-  const [editedUser, setEditedUser] = useState<ProfileModel>()
+  const [editedUser, setEditedUser] = useState<ProfileModel>({
+    twitch: '',
+    steam: ''
+  })
 
   const [edit, setEdit] = useState(false)
 
@@ -57,21 +64,19 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount, loadMyGroups }: Pr
   }]
 
   useEffect(() => {
-    getCurrentAccount()
-      .then(currentAccount => {
-        loadAccount.load(currentAccount.userId)
-          .then(profileData => {
-            setUser(profileData)
-            setLoading({...loading, page: false})
-          })
-        .catch(error => {
-          setLoading({...loading, page: false})
-          Alert.alert('Error!', error.message)
-        })
+    loadMe.load()
+      .then(profileData => {
+        setUser({steam: 'A', ...profileData})
+        setLoading({...loading, page: false})
+      })
+      .catch(error => {
+        setLoading({...loading, page: false})
+        Alert.alert('Error!', error.message)
       })
   }, [])
 
   useEffect(() => {
+    console.log(user)
     loadMyGroups.load()
       .then(groups => {
         setGroups(groups)
@@ -120,7 +125,7 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount, loadMyGroups }: Pr
       <ProfileContext.Provider value={{ editedUser, setEditedUser }}>
         <View style={styles.profileHeader}>
             <IconButton style={styles.config} iconName={IconName.configs} color='transparent' iconColor='#ffffff' onPress={() => setEdit(!edit)} />
-          <Avatar color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
+          <Avatar level={user.level} color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
           { edit 
           ? <TextInput
               style={styles.input}
@@ -132,27 +137,18 @@ const Profile: React.FC<Props> = ({ loadAccount, editAccount, loadMyGroups }: Pr
         </View>
 
         <View style={styles.content}>
-          <InfoPaper
-            variant='name'
-            text={user.name}
-            edit={edit}
-          />
-          <InfoPaper
-            variant='email'
-            text={user.email}
-            edit={edit}
-          />
-          <InfoPaper
-            variant='twitch'
-            text={'twitch.tv/gzpott'}
-          />
+          {
+            userInfos.map(info => (
+              <InfoPaper variant={info} text={user[info]} edit={edit} handleClick={() => setEdit(true)} />
+            ))
+          }
 
-          { edit && <Button title='save' buttonHeight={50} fontSize={24} handleClick={handleClick} loading={loading.edit} />}
+          { edit && <Button title='save' buttonHeight={50} fontSize={24} loading={loading.edit} onPress={handleClick} />}
 
           <Text style={styles.gamesTitle}>my games</Text>
           <View style={{flex: 1}}>
             {games.map(game => (
-              <GameCard info={game} />
+              <GameCard info={game}/>
             ))}
           </View>
 

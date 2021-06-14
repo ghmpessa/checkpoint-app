@@ -10,16 +10,17 @@ type Props = {
   badgeSize?: number
   badgeColor?: string
   shadow?: boolean
+  level?: number
 }
 
-const Avatar: React.FC<Props> = ({ shadow = false, color, size, label = 'NP', badgeSize, badgeColor = '#ff0000' }: Props) => {
+const Avatar: React.FC<Props> = ({ shadow = false, color, size, label = 'NP', badgeSize, badgeColor = '#ff0000', level }: Props) => {
   return (
     <View style={styles.container}>
       <PaperAvatar.Text
         labelStyle={{ fontFamily: 'Montserrat-Bold' }}
         style={[{ backgroundColor: color }, shadow && styles.avatar]}
         size={size} label={label} />
-      <Badge style={[styles.badge, { backgroundColor: badgeColor }]} size={badgeSize}>38</Badge>
+      <Badge style={[styles.badge, { backgroundColor: badgeColor }]} size={badgeSize}>{level}</Badge>
     </View>
   )
 }

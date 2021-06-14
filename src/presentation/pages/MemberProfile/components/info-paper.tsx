@@ -6,8 +6,9 @@ import { IconName } from '../../../components/icon'
 import { ProfileContext } from '../../../contexts'
 
 import twitchLogo from '../../../../../assets/twitch.png'
+import steamLogo from '../../../../../assets/steam.png'
 
-type Variant = 'name' | 'email' | 'twitch'
+type Variant = 'name' | 'email' | 'twitch' | 'steam'
 
 type Props = {
   variant?: Variant
@@ -41,11 +42,19 @@ const InfoPaper: React.FC<Props> = ({variant, text, edit}: Props) => {
         
       case 'twitch': 
         return (
-          <View style={styles.content}>
+          <View style={[styles.content, edit && {borderColor: '#49ff00'}]}>
             <Image style={styles.image} source={twitchLogo} />
             <Text style={styles.text}>{text}</Text>
           </View>
         )
+
+      case 'steam':
+        return (
+          <View style={[styles.content, edit && {borderColor: '#49ff00'}]}>
+            <Image style={styles.image} source={steamLogo} />
+            <Text style={styles.text}>{text}</Text>
+          </View>
+      )
     }
   }
 
@@ -69,10 +78,11 @@ const styles = StyleSheet.create({
     width: '100%',
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     borderColor:'#ffffff',
     borderWidth: 0.5,
-    padding: 15
+    padding: 15,
+    paddingLeft: 60
   },
   label: {
     fontSize: 18,
@@ -83,7 +93,7 @@ const styles = StyleSheet.create({
     left: 10
   },
   text: {
-    fontSize: 20,
+    fontSize: 16,
     fontFamily: 'Montserrat-Medium',
     color: '#ffffff'
   },
@@ -96,7 +106,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     width: '100%',
     fontFamily: 'Montserrat-Bold',
-    textAlign: 'center',
     textDecorationLine: 'none'
   }
 })

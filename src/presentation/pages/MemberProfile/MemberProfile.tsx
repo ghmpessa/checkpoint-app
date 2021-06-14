@@ -52,7 +52,7 @@ const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
   return (
     <ScrollView style={styles.container}>
         <View style={styles.profileHeader}>
-          <Avatar color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
+          <Avatar level={user.level} color='#000000' label={user.name.slice(0, 1)} size={120} badgeSize={30} badgeColor='#49ff00' />
           <Text style={styles.name}>{user.username}</Text>
         </View>
 
@@ -67,7 +67,11 @@ const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
           />
           <InfoPaper
             variant='twitch'
-            text={'twitch.tv/gzpott'}
+            text={user.twitch}
+          />
+          <InfoPaper
+            variant='steam'
+            text={user.steam}
           />
         </View>
     </ScrollView>

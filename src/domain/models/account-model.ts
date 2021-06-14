@@ -12,6 +12,9 @@ export type ProfileModel = {
   avatarPath?: string | null
   createdAt?: string
   updatedAt?: string
+  twitch?: string
+  steam?: string
+  level?: number
 }
 
 export type ProfileShortModel = {
