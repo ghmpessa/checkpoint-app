@@ -1,5 +1,5 @@
 import { PostModel } from '../models'
 
 export interface LoadPosts {
-  load: () => Promise<PostModel>
+  load: (groupId: string) => Promise<PostModel[]>
 }
