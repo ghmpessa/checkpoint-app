@@ -1,26 +1,36 @@
 import React, { useState, useEffect } from 'react'
-import { StyleSheet, View, Text, SafeAreaView, Image, FlatList, Alert } from 'react-native'
+import { StyleSheet, View, Text, SafeAreaView, Image, FlatList, Alert, TouchableOpacity, ActivityIndicator } from 'react-native'
 
 import { Button, Load } from '../../components'
 
 import valorant from '../../../../assets/valorant.png'
 import PostCard from '../Home/components/post-card'
-import { JoinGroup } from '@/domain/usecases'
+import { JoinGroup, LoadMembers } from '@/domain/usecases'
 import { useNavigation, useRoute } from '@react-navigation/native'
-import { GroupModel } from '../../../domain/models'
+import { GroupModel, ProfileShortModel } from '../../../domain/models'
+import MemberCard from './components/member-card'
 
 type Props = {
   joinGroup: JoinGroup
+  loadMembers: LoadMembers
 }
 
 interface Params {
   group: GroupModel
 }
 
-const Group: React.FC<Props> = ({ joinGroup }: Props) => {
+const Group: React.FC<Props> = ({ joinGroup, loadMembers }: Props) => {
   const navigation = useNavigation()
 
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState({
+    page: true,
+    feed: false
+  })
+  const [selected, setSelected] = useState({
+    feed: true,
+    members: false
+  })
+  const [members, setMembers] = useState<ProfileShortModel[]>([])
 
   const { group } = useRoute().params as Params
 
@@ -28,18 +38,34 @@ const Group: React.FC<Props> = ({ joinGroup }: Props) => {
     try {
       joinGroup.join({
         bind: true,
-        groupId: 'aaaa'
+        groupId: group.id
       })
     } catch (error) {
       Alert.alert('Error!', error.message)
     }
   }
 
+  const handleMembers = async (): Promise<void> => {
+    try {
+      if (loading.feed || selected.members) {
+        return
+      }
+      setLoading({...loading, feed: true})
+      setSelected({feed:false, members: true})
+      const members = await loadMembers.load(group.id)
+      setMembers(members)
+      setLoading({...loading, feed: false})
+    } catch (error) {
+      setLoading({...loading, feed: false})
+      Alert.alert('Error!', error.message)
+    }
+  }
+
   useEffect(() => {
-    setTimeout(() => setLoading(false), 1000)
+    setTimeout(() => setLoading({...loading, page: false}), 1000)
   }, [])
 
-  if (loading) {
+  if (loading.page) {
     return <Load />
   }
 
@@ -55,13 +81,31 @@ const Group: React.FC<Props> = ({ joinGroup }: Props) => {
           title='join group'
         />
       </View>
-      <View style={{flex: 1}}>
-        <FlatList
-          data={[1, 2, 3]}
-          renderItem={({ item }) => (
-            <PostCard />
-          )}
-        />
+      <View style={styles.buttonsWrap}>
+        <TouchableOpacity onPress={() => {setSelected({members: false, feed: true})}} style={styles.buttonLeft}>
+          <Text style={[styles.buttonsText, selected.feed && {color: '#49ff00'}]}>feed</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleMembers} style={styles.buttonRight}>
+          <Text style={[styles.buttonsText, selected.members &&  {color: '#49ff00'}]}>members</Text>
+        </TouchableOpacity>
+      </View>
+      <View style={{ flex: 1}}>
+        {loading.feed
+          ? <ActivityIndicator color='#49ff00' size={30} /> 
+            : selected.feed 
+              ? <FlatList
+              data={[1, 2, 3]}
+              renderItem={({ item }) => (
+                <PostCard />
+              )}
+              />
+              : <FlatList
+                data={members}
+                keyExtractor={member => member.id}
+                renderItem={({ item }) => (
+                  <MemberCard member={item} />
+                )}
+              />}
       </View>
     </SafeAreaView>
   )
@@ -74,21 +118,21 @@ const styles = StyleSheet.create({
   },
   title: {
     fontFamily: 'Montserrat-Bold',
-    fontSize: 32,
+    fontSize: 24,
     color: '#f1f1f1',
     textAlign: 'center',
     marginVertical: 5
   },
   subtitle: {
     fontFamily: 'Montserrat-Bold',
-    fontSize: 20,
+    fontSize: 18,
     color: '#666666',
     textAlign: 'center',
     marginVertical: 5
   },
   image: {
-    height: 110,
-    width: 110,
+    height: 50,
+    width: 50,
     alignSelf: 'center'
   },
   header: {
@@ -101,6 +145,30 @@ const styles = StyleSheet.create({
     borderBottomRightRadius: 80,
     borderBottomLeftRadius: 80,
     marginBottom: 10
+  },
+  buttonsWrap: {
+    flexDirection: 'row',
+    padding: 10,
+    width: '100%'
+  },
+  buttonLeft: {
+    borderRightWidth: 1,
+    borderLeftColor: '#666666',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonRight: {
+    borderLeftWidth: 1,
+    borderLeftColor: '#666666',
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  buttonsText: {
+    fontFamily: 'Montserrat-Bold',
+    fontSize: 18,
+    color: '#f2f2f2'
   }
 })
 

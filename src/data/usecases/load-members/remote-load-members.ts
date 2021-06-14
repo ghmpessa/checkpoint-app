@@ -18,7 +18,10 @@ export class RemoteLoadMembers implements LoadMembers {
     switch (httpResponse.status) {
       case HttpStatusCode.ok: return httpResponse.body
       case HttpStatusCode.serverError: throw new ServerError()
-      default: throw new UnexpectedError()
+      default: {
+        console.log(httpResponse.body)
+        throw new UnexpectedError()
+      }
     }
   }
 }

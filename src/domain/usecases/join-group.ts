@@ -6,5 +6,5 @@ export type JoinParams = {
 }
 
 export interface JoinGroup {
-  join: (params: JoinParams) => Promise<GroupModel>
+  join: (params: JoinParams) => Promise<void>
 }

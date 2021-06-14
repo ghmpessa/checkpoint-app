@@ -6,22 +6,28 @@ import { GroupModel } from '../../../domain/models'
 export class RemoteJoinGroup implements JoinGroup {
   constructor(
     private readonly url: string,
-    private readonly httpClient: HttpClient<GroupModel>
+    private readonly httpClient: HttpClient<void>
   ) { }
 
-  async join(params: JoinParams): Promise<GroupModel> {
+  async join(params: JoinParams): Promise<void> {
+    const bind = {
+      bind: params.bind
+    }
     const httpResponse = await this.httpClient.request({
-      url: this.url,
-      body: params,
+      url: `${this.url}/${params.groupId}/bind`,
+      body: bind,
       method: 'post'
     })
 
     switch ((await httpResponse).status) {
-      case HttpStatusCode.ok: return httpResponse.body
-      case HttpStatusCode.forbidden:
+      case HttpStatusCode.noContent: return
       case HttpStatusCode.badRequest: throw new InvalidParamError()
       case HttpStatusCode.serverError: throw new ServerError()
-      default: throw new UnexpectedError()
+      default: {
+        console.log(httpResponse.body)
+        console.log(`${this.url}/${params.groupId}/bind`)
+        throw new UnexpectedError()
+      }
     }
   }
 }
