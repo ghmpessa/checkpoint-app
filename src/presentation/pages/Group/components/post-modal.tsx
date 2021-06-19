@@ -61,15 +61,10 @@ const styles = StyleSheet.create({
     borderRadius: 50
   },
   modalView: {
-    flex: 1,
-    width: '100%',
-    height: '80%',
-    position: 'absolute',
-    bottom: 0,
     backgroundColor: '#242424',
-    borderTopRightRadius: 20,
-    borderTopLeftRadius: 20,
-    justifyContent: 'flex-start',
+    borderRadius: 20,
+    margin: 20,
+    justifyContent: 'center',
     elevation: 5,
     shadowColor: '#ffffff',
     padding: 10

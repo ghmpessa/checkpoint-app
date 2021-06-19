@@ -11,6 +11,7 @@ import { GroupModel, PostModel, ProfileShortModel } from '../../../domain/models
 import MemberCard from './components/member-card'
 import { GroupContext } from '../../contexts'
 import PostModal from './components/post-modal'
+import { Fragment } from 'react'
 
 type Props = {
   joinGroup: JoinGroup
@@ -74,7 +75,7 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts, addPost }: 
   const fetchPosts = async (loadType: string = 'page'): Promise<void> => {
     try {
       const posts = await loadPosts.load(group.id)
-      setPosts(posts)
+      setPosts(posts.reverse())
       setLoading({...loading, [loadType]: false})
     } catch (error) {
       setLoading({...loading, [loadType]: false})
@@ -95,13 +96,13 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts, addPost }: 
       }
 
       setLoading({...loading, post: true})
-      const newPost = await addPost.post({
+      await addPost.post({
         text,
         groupId: group.id
       })
-
-      setPosts([...posts, ...newPost])
       setVisible(!visible)
+      setLoading({ ...loading, feed: true })
+      fetchPosts('feed')
       setLoading({...loading, post: false})
     } catch (error) {
       setLoading({...loading, post: false})
@@ -111,7 +112,7 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts, addPost }: 
 
   useEffect(() => {
     fetchPosts()
-  }, [posts])
+  }, [])
 
   if (loading.page) {
     return <Load />
@@ -146,11 +147,15 @@ const Group: React.FC<Props> = ({ joinGroup, loadMembers, loadPosts, addPost }: 
                   ? <>
                   <Button title='add post' text style={styles.addPostButton} onPress={() => setVisible(!visible)} />
                     {posts.map(item => (
-                      <PostCard post={item} />
+                      <Fragment key={item.id}>
+                        <PostCard post={item} />
+                      </Fragment>
                     ))}
                   </>
                   : members.map(member => (
-                    <MemberCard member={member} handleClick={() => navigation.navigate('MemberProfile', { userId: member.id })} />
+                    <Fragment key={member.id}>
+                     <MemberCard member={member} handleClick={() => navigation.navigate('MemberProfile', { userId: member.id })} />
+                    </Fragment>
                   ))}
           </View>
         </ScrollView>
