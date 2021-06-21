@@ -65,14 +65,14 @@ const Profile: React.FC<Props> = ({ loadAccount }: Props) => {
             variant='email'
             text={user.email}
           />
-          <InfoPaper
+          {!!user.twitch.length && <InfoPaper
             variant='twitch'
             text={user.twitch}
-          />
-          <InfoPaper
+          />}
+          {!!user.steam.length && <InfoPaper
             variant='steam'
             text={user.steam}
-          />
+          />}
         </View>
     </ScrollView>
   )

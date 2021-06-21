@@ -76,7 +76,6 @@ const Profile: React.FC<Props> = ({ loadMe, editAccount, loadMyGroups }: Props) 
   }, [])
 
   useEffect(() => {
-    console.log(user)
     loadMyGroups.load()
       .then(groups => {
         setGroups(groups)

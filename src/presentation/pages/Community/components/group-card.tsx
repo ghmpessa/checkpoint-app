@@ -1,11 +1,6 @@
 /* eslint-disable @typescript-eslint/restrict-template-expressions */
-import React, { useState, useContext, useEffect } from 'react'
+import React from 'react'
 import { StyleSheet, Image, View, Text, TouchableOpacityProps, Modal, TouchableOpacity } from 'react-native'
-
-import { IconButton } from '../../../components'
-import { IconName } from '../../../components/icon'
-import { Swipeable } from 'react-native-gesture-handler'
-import Animated from 'react-native-reanimated'
 
 import csgoLogo from '../../../../../assets/cs.png'
 import valorantLogo from '../../../../../assets/valorant.png'

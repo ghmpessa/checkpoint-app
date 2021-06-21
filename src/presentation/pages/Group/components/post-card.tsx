@@ -11,21 +11,35 @@ type Props = {
 }
 
 const PostCard: React.FC<Props> = ({ post }: Props) => {
+
+  const getTime = () => {
+    const date = new Date(post.createdAt)
+    const now = new Date()
+
+    if ((now.getDate() - date.getDate()) === 0) {
+      return `posted ${now.getHours() - date.getHours()} hours ago`
+    } if ((now.getDate() - date.getDate()) === 1) {
+      return  `posted ${now.getDate() - date.getDate()} day ago`
+    } else {
+      return  `posted ${now.getDate() - date.getDate()} days ago`
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={styles.postHeader}>
         <Avatar label='V' size={45} badgeSize={20} badgeColor='#000000' />
         <View style={styles.headerText}>
           <Text style={styles.name}>{post.account.username}</Text>
-          <Text style={styles.time}>{new Date().getHours() -  new Date(post.createdAt).getHours()}</Text>
+          <Text style={styles.time}>{getTime()}</Text>
         </View>
       </View>
       <Text style={styles.postInfo}>{post.text}</Text>
-      <View style={styles.postActions}>
+      {/* <View style={styles.postActions}>
         <IconButton iconName={IconName.account} />
         <IconButton iconName={IconName.share} />
         <Button title='open' fontSize={16} />
-      </View>
+      </View> */}
     </View>
   )
 }

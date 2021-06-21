@@ -5,13 +5,10 @@ import { TextInput } from 'react-native-paper'
 
 import {CommunityContext} from '../../contexts'
 import CreateGroupModal from './components/create-group-modal'
-import { IconName } from '../../components/icon'
 import { CreateGroup, LoadGroups } from '../../../domain/usecases'
 import GroupCard, { GameLogos } from './components/group-card'
-import { Fragment } from 'react'
 import { useNavigation } from '@react-navigation/native'
 import { GroupModel } from '@/domain/models'
-import { useEffect } from 'react'
 
 type Props = {
   createGroup: CreateGroup

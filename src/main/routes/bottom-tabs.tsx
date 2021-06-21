@@ -23,13 +23,13 @@ const BottomTabs: React.FC = () => {
         borderTopColor: '#323232'
       }}
     >
-      <Tab.Screen
+      {/* <Tab.Screen
         name="Home"
         component={Home}
         options={{
           tabBarIcon: IconName.home,
         }}
-      />
+      /> */}
       <Tab.Screen
         name="Community"
         component={makeCommunity}

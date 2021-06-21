@@ -23,7 +23,7 @@ const AppRoutes: React.FC = () => {
 
   return (
     <Stack.Navigator
-      initialRouteName={'Main'}
+      initialRouteName={'Login'}
       headerMode='none'
     >
       <Stack.Screen
